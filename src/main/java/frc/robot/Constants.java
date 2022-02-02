@@ -21,6 +21,29 @@ public final class Constants {
         public static final int TAL_RF_ID = 2;
         public static final int TAL_RB_ID = 1;
 
+        public static final double TRACK_WIDTH = 0.6;
+
+        public static final double MAX_VELOCITY = 3;
+        public static final double MAX_ACCELERATION = 3;
+
+        public static final class LPID {
+            public static final double P = 1;
+            public static final double I = 0;
+            public static final double D = 0;
+        }
+
+        public static final class RPID {
+            public static final double P = 1;
+            public static final double I = 0;
+            public static final double D = 0;
+        }
+
+        public static final class FEEDFORWARD {
+            public static final double ks = 0;
+            public static final double kv = 0;
+            public static final double ka = 0;
+        }
+
     }
 
     public static final class TELEOP_COMMAND {
