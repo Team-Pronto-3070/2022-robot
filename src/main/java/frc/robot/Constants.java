@@ -16,10 +16,12 @@ public final class Constants {
 
     public static final class DRIVE {
 
-        public static final int TAL_LF_ID = 4;
-        public static final int TAL_LB_ID = 3;
+        public static final int TAL_LF_ID = 3;
+        public static final int TAL_LB_ID = 4;
         public static final int TAL_RF_ID = 2;
         public static final int TAL_RB_ID = 1;
+
+        public static final double RAMP_TIME = 0.4;
 
         public static final double TRACK_WIDTH = 0.6;
 
@@ -29,12 +31,12 @@ public final class Constants {
         // ^ / 2048 (sensor units / rotation) = 0.00002182807396
 
         //meters / encoder tick
-        public static final double SENSOR_POSITION_COEFFICIENT = 0.0002182807396;
+        public static final double SENSOR_POSITION_COEFFICIENT = 0.00002182807396;
 
         // ^ * 10
-        public static final double SENSOR_VELOCITY_COEFFICIENT = 0;
+        public static final double SENSOR_VELOCITY_COEFFICIENT = 0.0002182807396;
 
-        public static final double MAX_VELOCITY = 3;
+        public static final double MAX_VELOCITY = 2;
         public static final double MAX_ACCELERATION = 3;
 
         public static final class LPID {

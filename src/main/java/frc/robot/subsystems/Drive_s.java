@@ -70,6 +70,11 @@ public class Drive_s extends SubsystemBase{
         talRF.setInverted(true);
         talRB.setInverted(true);
 
+        talLF.configOpenloopRamp(Constants.DRIVE.RAMP_TIME);
+        talLB.configOpenloopRamp(Constants.DRIVE.RAMP_TIME);
+        talRF.configOpenloopRamp(Constants.DRIVE.RAMP_TIME);
+        talRB.configOpenloopRamp(Constants.DRIVE.RAMP_TIME);
+
         talLB.follow(talLF);
         talRB.follow(talRF);
 
@@ -113,6 +118,7 @@ public class Drive_s extends SubsystemBase{
     public void tankDriveVolts(double left, double right) {
         talLF.setVoltage(left);
         talRF.setVoltage(right);
+        diffDrive.feed();
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
@@ -125,6 +131,8 @@ public class Drive_s extends SubsystemBase{
     }
 
     public void resetPose(Pose2d newPose) {
+        talLF.setSelectedSensorPosition(0);
+        talRF.setSelectedSensorPosition(0);
         odometry.resetPosition(newPose, Rotation2d.fromDegrees(gyro.getAngle()));
     }
 
@@ -154,6 +162,14 @@ public class Drive_s extends SubsystemBase{
         SmartDashboard.putNumber("talLR", talLB.get());
         SmartDashboard.putNumber("talBF", talRF.get());
         SmartDashboard.putNumber("talBR", talRB.get());
+
+        SmartDashboard.putNumber("gyro", gyro.getAngle());
+        SmartDashboard.putNumber("gyro_pos_X", gyro.getGyroAngleX());
+        SmartDashboard.putNumber("gyro_pos_Y", gyro.getGyroAngleY());
+        SmartDashboard.putNumber("gyro_pos_Z", gyro.getGyroAngleZ());
+        SmartDashboard.putNumber("gyro_vel_X", gyro.getGyroRateX());
+        SmartDashboard.putNumber("gyro_vel_Y", gyro.getGyroRateY());
+        SmartDashboard.putNumber("gyro_vel_Z", gyro.getGyroRateZ());
 
         odometry.update(Rotation2d.fromDegrees(gyro.getAngle()),
                         Constants.DRIVE.SENSOR_POSITION_COEFFICIENT * talLF.getSelectedSensorPosition(),
