@@ -7,11 +7,13 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -27,6 +29,8 @@ public class Drive_s extends SubsystemBase{
     private WPI_TalonFX talLB;
     private WPI_TalonFX talRF;
     private WPI_TalonFX talRB;
+
+    private ADIS16448_IMU gyro;
 
     private DifferentialDrive diffDrive;
     private DifferentialDriveKinematics kinematics;
@@ -69,6 +73,8 @@ public class Drive_s extends SubsystemBase{
         talLB.follow(talLF);
         talRB.follow(talRF);
 
+        gyro = new ADIS16448_IMU();
+
         LPID = new PIDController(Constants.DRIVE.LPID.P,
                                  Constants.DRIVE.LPID.I,
                                  Constants.DRIVE.LPID.D);
@@ -83,7 +89,7 @@ public class Drive_s extends SubsystemBase{
 
         diffDrive = new DifferentialDrive(talLF, talRF);
         kinematics = new DifferentialDriveKinematics(Constants.DRIVE.TRACK_WIDTH);
-        odometry = new DifferentialDriveOdometry(gyro.getRotation2d());
+        odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(gyro.getAngle()));
 
         trajectoryConfig = new TrajectoryConfig(Constants.DRIVE.MAX_VELOCITY,
                                                 Constants.DRIVE.MAX_ACCELERATION)
@@ -119,7 +125,7 @@ public class Drive_s extends SubsystemBase{
     }
 
     public void resetPose(Pose2d newPose) {
-        odometry.resetPosition(newPose, gyro.getRotation2d());
+        odometry.resetPosition(newPose, Rotation2d.fromDegrees(gyro.getAngle()));
     }
 
     public DifferentialDriveKinematics getKinematics() {
@@ -149,7 +155,7 @@ public class Drive_s extends SubsystemBase{
         SmartDashboard.putNumber("talBF", talRF.get());
         SmartDashboard.putNumber("talBR", talRB.get());
 
-        odometry.update(gyro.getRotation2d(),
+        odometry.update(Rotation2d.fromDegrees(gyro.getAngle()),
                         Constants.DRIVE.SENSOR_POSITION_COEFFICIENT * talLF.getSelectedSensorPosition(),
                         Constants.DRIVE.SENSOR_POSITION_COEFFICIENT * talRF.getSelectedSensorPosition());
     }
