@@ -23,7 +23,9 @@ public final class Constants {
 
         public static final double RAMP_TIME = 0.4;
 
-        public static final double TRACK_WIDTH = 0.6;
+        //public static final double TRACK_WIDTH = 0.6;
+        public static final double TRACK_WIDTH = 2;
+
 
         //gearbox: 10.71:1
         //wheel circumference = pi * 6 in * 2.54 cm / in * 1 m / 100 cm = 0.478778720407
@@ -36,8 +38,9 @@ public final class Constants {
         // ^ * 10
         public static final double SENSOR_VELOCITY_COEFFICIENT = 0.0002182807396;
 
-        public static final double MAX_VELOCITY = 2;
-        public static final double MAX_ACCELERATION = 3;
+        public static final double MAX_VELOCITY = 3;
+        public static final double MAX_ACCELERATION = 2.5;
+        public static final double MAX_CENTRIPETAL_ACCELERATION = 1.5;
 
         public static final class LPID {
             public static final double P = 1;

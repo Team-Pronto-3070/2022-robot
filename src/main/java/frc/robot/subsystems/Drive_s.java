@@ -12,6 +12,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.SPI;
@@ -95,12 +96,13 @@ public class Drive_s extends SubsystemBase{
 
         diffDrive = new DifferentialDrive(talLF, talRF);
         kinematics = new DifferentialDriveKinematics(Constants.DRIVE.TRACK_WIDTH);
-        odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(gyro.getAngle()));
+        odometry = new DifferentialDriveOdometry(getGyro());
 
         trajectoryConfig = new TrajectoryConfig(Constants.DRIVE.MAX_VELOCITY,
                                                 Constants.DRIVE.MAX_ACCELERATION)
                             .setKinematics(kinematics)
-                            .addConstraint(new DifferentialDriveVoltageConstraint(ff, kinematics, 10));
+                            .addConstraint(new DifferentialDriveVoltageConstraint(ff, kinematics, 10))
+                            .addConstraint(new CentripetalAccelerationConstraint(Constants.DRIVE.MAX_CENTRIPETAL_ACCELERATION));
     }
 
     /**
@@ -131,10 +133,14 @@ public class Drive_s extends SubsystemBase{
         return odometry.getPoseMeters();
     }
 
+    public Rotation2d getGyro() {
+        return Rotation2d.fromDegrees(-gyro.getAngle());
+    }
+
     public void resetPose(Pose2d newPose) {
         talLF.setSelectedSensorPosition(0);
         talRF.setSelectedSensorPosition(0);
-        odometry.resetPosition(newPose, Rotation2d.fromDegrees(gyro.getAngle()));
+        odometry.resetPosition(newPose, getGyro());
     }
 
     public DifferentialDriveKinematics getKinematics() {
@@ -160,9 +166,9 @@ public class Drive_s extends SubsystemBase{
     @Override
     public void periodic() {
         SmartDashboard.putNumber("talLF", talLF.get());
-        SmartDashboard.putNumber("talLR", talLB.get());
-        SmartDashboard.putNumber("talBF", talRF.get());
-        SmartDashboard.putNumber("talBR", talRB.get());
+        SmartDashboard.putNumber("talLB", talLB.get());
+        SmartDashboard.putNumber("talRF", talRF.get());
+        SmartDashboard.putNumber("talRB", talRB.get());
 
         SmartDashboard.putNumber("gyro", gyro.getAngle());
         SmartDashboard.putNumber("gyro_pos_X", gyro.getGyroAngleX());
@@ -172,7 +178,11 @@ public class Drive_s extends SubsystemBase{
         SmartDashboard.putNumber("gyro_vel_Y", gyro.getGyroRateY());
         SmartDashboard.putNumber("gyro_vel_Z", gyro.getGyroRateZ());
 
-        odometry.update(Rotation2d.fromDegrees(gyro.getAngle()),
+        SmartDashboard.putNumber("pose_x", getPose().getX());
+        SmartDashboard.putNumber("pose_y", getPose().getY());
+        SmartDashboard.putString("pose_theta", getPose().getRotation().toString());
+
+        odometry.update(getGyro(),
                         Constants.DRIVE.SENSOR_POSITION_COEFFICIENT * talLF.getSelectedSensorPosition(),
                         Constants.DRIVE.SENSOR_POSITION_COEFFICIENT * talRF.getSelectedSensorPosition());
     }
