@@ -23,8 +23,7 @@ public final class Constants {
 
         public static final double RAMP_TIME = 0.4;
 
-        //public static final double TRACK_WIDTH = 0.6;
-        public static final double TRACK_WIDTH = 2;
+        public static final double TRACK_WIDTH = 0.66049;
 
 
         //gearbox: 10.71:1
@@ -38,9 +37,9 @@ public final class Constants {
         // ^ * 10
         public static final double SENSOR_VELOCITY_COEFFICIENT = 0.0002182807396;
 
-        public static final double MAX_VELOCITY = 3;
-        public static final double MAX_ACCELERATION = 2.5;
-        public static final double MAX_CENTRIPETAL_ACCELERATION = 1.5;
+        public static final double MAX_VELOCITY = 1;
+        public static final double MAX_ACCELERATION = 1;
+        public static final double MAX_CENTRIPETAL_ACCELERATION = 1;
 
         public static final class LPID {
             public static final double P = 1;
@@ -55,9 +54,9 @@ public final class Constants {
         }
 
         public static final class FEEDFORWARD {
-            public static final double ks = 0;
-            public static final double kv = 0;
-            public static final double ka = 0;
+            public static final double ks = 0.62944;
+            public static final double kv = 2.4241;
+            public static final double ka = 0.17373;
         }
 
     }

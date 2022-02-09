@@ -15,6 +15,7 @@ import frc.robot.commands.Auto_SimpleTest;
 import frc.robot.commands.TeleopCommand;
 import frc.robot.subsystems.Drive_s;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 
 /**
@@ -28,7 +29,7 @@ public class RobotContainer {
   private final Drive_s drive = new Drive_s();
   private final OI oi = new OI();
 
-  private enum autoOptions {SIMPLE_TEST}
+  private enum autoOptions {NONE, SIMPLE_TEST}
 
   //define a sendable chooser to select the autonomous command
   private SendableChooser<autoOptions> autoChooser = new SendableChooser<autoOptions>();
@@ -41,7 +42,7 @@ public class RobotContainer {
     NetworkTableInstance.getDefault().setUpdateRate(0.01);
 
     //add options to the chooser
-    autoChooser.setDefaultOption("None", null);
+    autoChooser.setDefaultOption("None", autoOptions.NONE);
     autoChooser.addOption("Simple test", autoOptions.SIMPLE_TEST);
 
     //put the chooser on the dashboard
@@ -66,6 +67,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     return new SelectCommand(Map.ofEntries(
+                                Map.entry(autoOptions.NONE, new InstantCommand(() -> System.out.println("no auto command selected"))),
                                 Map.entry(autoOptions.SIMPLE_TEST, new Auto_SimpleTest(drive))
                     ), autoChooser::getSelected);
   }
