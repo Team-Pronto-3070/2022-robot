@@ -61,6 +61,11 @@ public final class Constants {
 
     }
 
+    public static final class CLIMBER {
+        public static final int TELESCOPING_MOTOR_ID = 0;
+        public static final int ROTATING_MOTOR_ID = 0;
+    }
+
     public static final class TELEOP_COMMAND {
         public static final double JOY_STICK_DEADZONE = 0.15;
         public static final double JOY_STICK_OMEGA_DEADZONE = 0.25;
