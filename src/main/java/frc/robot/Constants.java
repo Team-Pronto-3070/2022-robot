@@ -16,10 +16,48 @@ public final class Constants {
 
     public static final class DRIVE {
 
-        public static final int TAL_LF_ID = 4;
-        public static final int TAL_LB_ID = 3;
+        public static final int TAL_LF_ID = 3;
+        public static final int TAL_LB_ID = 4;
         public static final int TAL_RF_ID = 2;
         public static final int TAL_RB_ID = 1;
+
+        public static final double RAMP_TIME = 0.4;
+
+        public static final double TRACK_WIDTH = 0.66049;
+
+
+        //gearbox: 10.71:1
+        //wheel circumference = pi * 6 in * 2.54 cm / in * 1 m / 100 cm = 0.478778720407
+        //circumference / gear ratio = 0.0447038954628
+        // ^ / 2048 (sensor units / rotation) = 0.00002182807396
+
+        //meters / encoder tick
+        public static final double SENSOR_POSITION_COEFFICIENT = 0.00002182807396;
+
+        // ^ * 10
+        public static final double SENSOR_VELOCITY_COEFFICIENT = 0.0002182807396;
+
+        public static final double MAX_VELOCITY = 1;
+        public static final double MAX_ACCELERATION = 1;
+        public static final double MAX_CENTRIPETAL_ACCELERATION = 1;
+
+        public static final class LPID {
+            public static final double P = 1;
+            public static final double I = 0;
+            public static final double D = 0;
+        }
+
+        public static final class RPID {
+            public static final double P = 1;
+            public static final double I = 0;
+            public static final double D = 0;
+        }
+
+        public static final class FEEDFORWARD {
+            public static final double ks = 0.62944;
+            public static final double kv = 2.4241;
+            public static final double ka = 0.17373;
+        }
 
     }
 
