@@ -1,9 +1,10 @@
 package frc.robot;
 
-import java.util.HashMap;
+import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -13,58 +14,39 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  */
 public class OI {
     
-    /* Class Variable Declaration */
-    private HashMap<String, JoystickButton> buttons;
-    
     private Joystick joystick;
     private XboxController xbox;
+
+    public final Button ClimberDownButton;
+    public final Button ClimberUpButton;
+    public final Button ClimberForwardButton;
+    public final Button ClimberBackwardButton;
+    public final Supplier<Double> ClimberSpeed;
 
     /**
      * Constructs the Operator Interface.
      */
-    public OI() {
-        /* Class Variable Instantiation */
-        buttons = new HashMap<>();
-    
+    public OI() {    
         switch (Constants.OI.CONTROLLER) {
             case JOYSTICK:     
                 joystick = new Joystick(Constants.OI.JOY_PORT);
+                ClimberDownButton = new JoystickButton(xbox, 0);
+                ClimberUpButton = new JoystickButton(xbox, 0);
+                ClimberForwardButton = new JoystickButton(xbox, 0);
+                ClimberBackwardButton = new JoystickButton(xbox, 0);
+                ClimberSpeed = () -> joystick.getRawAxis(2);
                 break;
+            default:
             case XBOX: 
                 xbox = new XboxController(Constants.OI.XBOX_PORT);
+                ClimberDownButton = new JoystickButton(xbox, XboxController.Button.kA.value);
+                ClimberUpButton = new JoystickButton(xbox, XboxController.Button.kX.value);
+                ClimberForwardButton = new JoystickButton(xbox, XboxController.Button.kB.value);
+                ClimberBackwardButton = new JoystickButton(xbox, XboxController.Button.kY.value);
+                ClimberSpeed = () -> xbox.getRightTriggerAxis();
                 break;
 
         }
-    }
-
-    /**
-     * Add a particular button to the operator interface.
-     * Although these buttons could technically be accessed using the joystick object(s),
-     * this implementation makes it easier for the developers to understand
-     * the functionality of each button and allows for smoother implementation
-     * of configureButtonBindings() in RobotContainer.
-     * 
-     * @param name of the button.
-     * @param joystick that the button belongs to.
-     * @param number assigned to the button by the controller in the Driver Station.
-     */
-    public void addButton(String name, int number) {
-        switch (Constants.OI.CONTROLLER) {
-            case JOYSTICK:
-                buttons.put(name, new JoystickButton(joystick, number));
-                break;
-            case XBOX:
-                buttons.put(name, new JoystickButton(xbox, number));
-        }
-        //buttons.put(name, new JoystickButton(joystick, number));
-    }
-
-    /**
-     * @param name of a joystick button in the OI.
-     * @return A desired JoystickButton object from the OI.
-     */
-    public JoystickButton getButton(String name) {
-        return buttons.get(name);
     }
 
     public double getX(){
