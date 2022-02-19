@@ -18,9 +18,12 @@ public class OI {
     private HashMap<String, JoystickButton> buttons;
 
     public final Button ShooterButton;
+    public final Button IntakeButton;
+    public final Button IndexerButton;
     
     private Joystick joystick;
     private XboxController xbox;
+
 
     /**
      * Constructs the Operator Interface.
@@ -33,11 +36,15 @@ public class OI {
             case JOYSTICK:     
                 joystick = new Joystick(Constants.OI.JOY_PORT);
                 ShooterButton = new JoystickButton(joystick, 0);
+                IntakeButton = new JoystickButton(joystick, 0);
+                IndexerButton = new JoystickButton(joystick, 0);
                 break;
             default:
             case XBOX: 
                 xbox = new XboxController(Constants.OI.XBOX_PORT);
                 ShooterButton = new JoystickButton(xbox, XboxController.Button.kY.value);
+                IntakeButton = new JoystickButton(xbox, XboxController.Button.kY.value);
+                IndexerButton = new JoystickButton(xbox, XboxController.Button.kY.value);
                 break;
 
         }

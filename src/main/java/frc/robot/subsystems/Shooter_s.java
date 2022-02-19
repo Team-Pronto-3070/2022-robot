@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -14,17 +13,23 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import frc.robot.Constants;
 
+/**
+ * Shooter Subsystem
+ * 
+ * Handles all the motors in the shooter
+ */
 public class Shooter_s extends SubsystemBase {
 
   private WPI_TalonFX tal_Shooter;
   private WPI_TalonSRX tal_Indexer;
   private WPI_TalonSRX tal_Intake;
   
+
   public Shooter_s() {
 
     tal_Shooter = new WPI_TalonFX(Constants.SHOOTER.TAL_SH_ID);
-    tal_Indexer = new WPI_TalonSRX(Constants.SHOOTER.TAL_ID_ID);
-    tal_Intake = new WPI_TalonSRX(Constants.SHOOTER.TAL_IN_ID);
+    tal_Indexer = new WPI_TalonSRX(Constants.SHOOTER.TAL_IND_ID);
+    tal_Intake = new WPI_TalonSRX(Constants.SHOOTER.TAL_INT_ID);
     
     tal_Shooter.configFactoryDefault();
     tal_Indexer.configFactoryDefault();
@@ -44,7 +49,7 @@ public class Shooter_s extends SubsystemBase {
     tal_Indexer.configOpenloopRamp(Constants.SHOOTER.RAMP_TIME);
     tal_Intake.configOpenloopRamp(Constants.SHOOTER.RAMP_TIME);                          
   }
-
+  
   public void setIndexer(double speed) {
     tal_Indexer.set(speed);
   }
