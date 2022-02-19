@@ -14,6 +14,27 @@ package frc.robot;
  */
 public final class Constants {
 
+    public static final class SHOOTER {
+        
+        public static final int TAL_SH_ID = 0;
+        public static final int TAL_ID_ID = 0;
+        public static final int TAL_IN_ID = 0;
+
+        public static final double RAMP_TIME = 0.4;
+
+        public static final class SH_PID {
+            public static final double P = 1;
+            public static final double I = 0;
+            public static final double D = 0;
+        }
+
+        public static final class FEEDFORWARD {
+            public static final double ks = 0.62944;
+            public static final double kv = 2.4241;
+            public static final double ka = 0.17373;
+        }
+    }
+
     public static final class DRIVE {
 
         public static final int TAL_LF_ID = 3;

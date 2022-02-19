@@ -13,7 +13,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.Auto_SimpleTest;
 import frc.robot.commands.TeleopCommand;
+import frc.robot.commands.TeleopShooterCommand;
 import frc.robot.subsystems.Drive_s;
+import frc.robot.subsystems.Shooter_s;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
@@ -28,6 +30,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drive_s drive = new Drive_s();
   private final OI oi = new OI();
+  private final Shooter_s shooter = new Shooter_s();
 
   private enum autoOptions {NONE, SIMPLE_TEST}
 
@@ -49,6 +52,8 @@ public class RobotContainer {
     SmartDashboard.putData(autoChooser);
 
     drive.setDefaultCommand(new TeleopCommand(drive, oi));
+
+    shooter.setDefaultCommand(new TeleopShooterCommand(shooter, oi));
   }
 
   /**

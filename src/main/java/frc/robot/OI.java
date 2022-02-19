@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -15,6 +16,8 @@ public class OI {
     
     /* Class Variable Declaration */
     private HashMap<String, JoystickButton> buttons;
+
+    public final Button ShooterButton;
     
     private Joystick joystick;
     private XboxController xbox;
@@ -29,9 +32,12 @@ public class OI {
         switch (Constants.OI.CONTROLLER) {
             case JOYSTICK:     
                 joystick = new Joystick(Constants.OI.JOY_PORT);
+                ShooterButton = new JoystickButton(joystick, 0);
                 break;
+            default:
             case XBOX: 
                 xbox = new XboxController(Constants.OI.XBOX_PORT);
+                ShooterButton = new JoystickButton(xbox, XboxController.Button.kY.value);
                 break;
 
         }
