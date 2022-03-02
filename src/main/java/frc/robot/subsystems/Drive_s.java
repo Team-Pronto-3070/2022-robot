@@ -163,6 +163,11 @@ public class Drive_s extends SubsystemBase{
         return trajectoryConfig;
     }
 
+    public void stop() {
+        talLF.set(0);
+        talRF.set(0);
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("talLF", talLF.get());
