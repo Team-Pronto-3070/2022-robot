@@ -15,13 +15,13 @@ package frc.robot;
 public final class Constants {
 
     public static final class SHOOTER {
-        public static final int TAL_SHOOTER_ID = 0;
+        public static final int TAL_SHOOTER_ID = 5;
         public static final double RAMP_TIME = 0.2;
         public static final double DEFAULT_SHOOTER_RPM = 6000;
     }
 
     public static final class INDEXER {
-        public static final int TAL_INDEXER_ID = 0;
+        public static final int TAL_INDEXER_ID = 10;
         public static final double RAMP_TIME = 0.2;
     }
 
