@@ -4,12 +4,13 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.controller.BangBangController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import frc.robot.Constants;
 
@@ -21,55 +22,46 @@ import frc.robot.Constants;
 public class Shooter_s extends SubsystemBase {
 
   private WPI_TalonFX tal_Shooter;
-  private WPI_TalonSRX tal_Indexer;
-  private WPI_TalonSRX tal_Intake;
+  private BangBangController shooter_bb;
+  private double shooterRPM = Constants.SHOOTER.DEFAULT_SHOOTER_RPM;
   
 
   public Shooter_s() {
 
-    tal_Shooter = new WPI_TalonFX(Constants.SHOOTER.TAL_SH_ID);
-    tal_Indexer = new WPI_TalonSRX(Constants.SHOOTER.TAL_IND_ID);
-    tal_Intake = new WPI_TalonSRX(Constants.SHOOTER.TAL_INT_ID);
-    
+    tal_Shooter = new WPI_TalonFX(Constants.SHOOTER.TAL_SHOOTER_ID);
     tal_Shooter.configFactoryDefault();
-    tal_Indexer.configFactoryDefault();
-    tal_Intake.configFactoryDefault();
-
     tal_Shooter.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-
     tal_Shooter.setNeutralMode(NeutralMode.Coast);
-    tal_Indexer.setNeutralMode(NeutralMode.Brake);
-    tal_Intake.setNeutralMode(NeutralMode.Brake);
-
     tal_Shooter.setInverted(false);
-    tal_Indexer.setInverted(false);
-    tal_Intake.setInverted(false);
+    tal_Shooter.configOpenloopRamp(Constants.SHOOTER.RAMP_TIME);  
+    
+    shooter_bb = new BangBangController();
 
-    tal_Shooter.configOpenloopRamp(Constants.SHOOTER.RAMP_TIME);
-    tal_Indexer.configOpenloopRamp(Constants.SHOOTER.RAMP_TIME);
-    tal_Intake.configOpenloopRamp(Constants.SHOOTER.RAMP_TIME);                          
-  }
-  
-  public void setIndexer(double speed) {
-    tal_Indexer.set(speed);
+    SmartDashboard.putNumber("shooter rpm", Constants.SHOOTER.DEFAULT_SHOOTER_RPM);
   }
 
-  public void setShooter(double speed) {
+  public void set(double speed) {
     tal_Shooter.set(speed);
   }
 
-  public void setIntake(double speed) {
-    tal_Intake.set(speed);
+  public double getRPM() {
+    return tal_Shooter.getSelectedSensorVelocity() * 600 / 2048;
   }
 
-  public double getShooterSpeed() {
-    return tal_Shooter.getSelectedSensorVelocity();
+  public void setRPM(double rpm) {
+    set(shooter_bb.calculate(getRPM(), rpm));
+  }
+
+  public void setRPM() {
+    setRPM(shooterRPM);
+  }
+
+  public void setDashboardRPM() {
+    shooterRPM = SmartDashboard.getNumber("shooter rpm", Constants.SHOOTER.DEFAULT_SHOOTER_RPM);
   }
 
   public void stop() {
     tal_Shooter.set(0);
-    tal_Indexer.set(0);
-    tal_Intake.set(0);
   }
 }
 

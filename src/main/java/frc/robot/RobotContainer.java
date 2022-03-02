@@ -13,11 +13,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.Auto_SimpleTest;
 import frc.robot.commands.TeleopCommand;
-import frc.robot.commands.TeleopShooterCommand;
 import frc.robot.subsystems.Drive_s;
+import frc.robot.subsystems.Indexer_s;
 import frc.robot.subsystems.Shooter_s;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 
 /**
@@ -31,6 +32,7 @@ public class RobotContainer {
   private final Drive_s drive = new Drive_s();
   private final OI oi = new OI();
   private final Shooter_s shooter = new Shooter_s();
+  private final Indexer_s indexer = new Indexer_s();
 
   private enum autoOptions {NONE, SIMPLE_TEST}
 
@@ -52,8 +54,8 @@ public class RobotContainer {
     SmartDashboard.putData(autoChooser);
 
     drive.setDefaultCommand(new TeleopCommand(drive, oi));
-
-    shooter.setDefaultCommand(new TeleopShooterCommand(shooter, oi));
+    shooter.setDefaultCommand(new RunCommand(shooter::stop, shooter));
+    indexer.setDefaultCommand(new RunCommand(() -> indexer.set(oi.IndexerSpeed.get()), indexer));
   }
 
   /**
@@ -62,7 +64,10 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+    oi.shooterButton.whileHeld(shooter::setRPM, shooter);
+    oi.getDashboardShooterRPM.whenPressed(shooter::setDashboardRPM, shooter);
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
