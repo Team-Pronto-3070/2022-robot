@@ -80,7 +80,7 @@ public class Drive_s extends SubsystemBase{
         talLB.follow(talLF);
         talRB.follow(talRF);
 
-        gyro = new ADIS16448_IMU(ADIS16448_IMU.IMUAxis.kZ, SPI.Port.kMXP, ADIS16448_IMU.CalibrationTime._1s);
+        gyro = new ADIS16448_IMU(ADIS16448_IMU.IMUAxis.kX, SPI.Port.kMXP, ADIS16448_IMU.CalibrationTime._1s);
 
         LPID = new PIDController(Constants.DRIVE.LPID.P,
                                  Constants.DRIVE.LPID.I,
@@ -134,7 +134,7 @@ public class Drive_s extends SubsystemBase{
     }
 
     public Rotation2d getGyro() {
-        return Rotation2d.fromDegrees(-gyro.getAngle());
+        return Rotation2d.fromDegrees(gyro.getAngle());
     }
 
     public void resetPose(Pose2d newPose) {

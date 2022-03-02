@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class OI {
     
     private Joystick joystick;
-    private XboxController xbox;
+    public XboxController xbox;
 
     public final Supplier<Double> teleopX;
     public final Supplier<Double> teleopTheta;
@@ -24,6 +24,7 @@ public class OI {
 
     public final Button shooterButton;
     public final Button getDashboardShooterRPM;
+    public final Button indexerReverseButton;
 
     /**
      * Constructs the Operator Interface.
@@ -40,6 +41,7 @@ public class OI {
 
                 shooterButton = new JoystickButton(joystick, 0);
                 getDashboardShooterRPM = new JoystickButton(joystick, 1);
+                indexerReverseButton = new JoystickButton(joystick, 2);
 
                 break;
 
@@ -54,6 +56,7 @@ public class OI {
 
                 shooterButton = new JoystickButton(xbox, XboxController.Button.kLeftBumper.value);
                 getDashboardShooterRPM = new JoystickButton(xbox, XboxController.Button.kY.value);
+                indexerReverseButton = new JoystickButton(xbox, XboxController.Button.kB.value);
 
                 break;
 

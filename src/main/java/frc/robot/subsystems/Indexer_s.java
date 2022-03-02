@@ -25,7 +25,7 @@ public class Indexer_s extends SubsystemBase {
     tal_Indexer = new WPI_TalonSRX(Constants.INDEXER.TAL_INDEXER_ID);
     tal_Indexer.configFactoryDefault();
     tal_Indexer.setNeutralMode(NeutralMode.Brake);
-    tal_Indexer.setInverted(false);
+    tal_Indexer.setInverted(true);
     tal_Indexer.configOpenloopRamp(Constants.INDEXER.RAMP_TIME);
   }
   

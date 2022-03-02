@@ -4,10 +4,13 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.controller.BangBangController;
+//import edu.wpi.first.math.MathUtil;
+//import edu.wpi.first.math.controller.BangBangController;
+//import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -22,7 +25,8 @@ import frc.robot.Constants;
 public class Shooter_s extends SubsystemBase {
 
   private WPI_TalonFX tal_Shooter;
-  private BangBangController shooter_bb;
+//  private BangBangController shooter_bb;
+//  private PIDController shooter_PID;
   private double shooterRPM = Constants.SHOOTER.DEFAULT_SHOOTER_RPM;
   
 
@@ -32,10 +36,15 @@ public class Shooter_s extends SubsystemBase {
     tal_Shooter.configFactoryDefault();
     tal_Shooter.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     tal_Shooter.setNeutralMode(NeutralMode.Coast);
-    tal_Shooter.setInverted(false);
-    tal_Shooter.configOpenloopRamp(Constants.SHOOTER.RAMP_TIME);  
+    tal_Shooter.setInverted(true);
+    tal_Shooter.configOpenloopRamp(Constants.SHOOTER.RAMP_TIME);
+    tal_Shooter.configPeakOutputReverse(0);
+    tal_Shooter.config_kP(0, Constants.SHOOTER.PID.P);
+    tal_Shooter.config_kI(0, Constants.SHOOTER.PID.I);
+    tal_Shooter.config_kD(0, Constants.SHOOTER.PID.D);
     
-    shooter_bb = new BangBangController();
+//    shooter_bb = new BangBangController();
+//    shooter_PID = new PIDController(Constants.SHOOTER.PID.P, Constants.SHOOTER.PID.I, Constants.SHOOTER.PID.D);
 
     SmartDashboard.putNumber("shooter rpm", Constants.SHOOTER.DEFAULT_SHOOTER_RPM);
   }
@@ -49,7 +58,9 @@ public class Shooter_s extends SubsystemBase {
   }
 
   public void setRPM(double rpm) {
-    set(shooter_bb.calculate(getRPM(), rpm));
+//    set(shooter_bb.calculate(getRPM(), rpm));
+//    set(MathUtil.clamp(shooter_PID.calculate(getRPM(), rpm), 0, 1));
+    tal_Shooter.set(ControlMode.Velocity, rpm * 2048 / 600);
   }
 
   public void setRPM() {
@@ -62,6 +73,11 @@ public class Shooter_s extends SubsystemBase {
 
   public void stop() {
     tal_Shooter.set(0);
+  }
+
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber("current shooter rpm", getRPM());
   }
 }
 
