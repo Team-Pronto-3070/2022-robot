@@ -11,9 +11,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Drive_s;
 
-public class Auto_SimpleTest extends SequentialCommandGroup{
+public class Auto_TrajectoryTest extends SequentialCommandGroup{
     
-    public Auto_SimpleTest(Drive_s drive) {
+    public Auto_TrajectoryTest(Drive_s drive) {
         Trajectory exampleTrajectory =
             TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction

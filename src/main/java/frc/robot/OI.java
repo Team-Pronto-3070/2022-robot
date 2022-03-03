@@ -1,9 +1,10 @@
 package frc.robot;
 
-import java.util.HashMap;
+import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -13,81 +14,61 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  */
 public class OI {
     
-    /* Class Variable Declaration */
-    private HashMap<String, JoystickButton> buttons;
-    
     private Joystick joystick;
-    private XboxController xbox;
+    public XboxController xbox;
+
+    public final Supplier<Double> teleopX;
+    public final Supplier<Double> teleopTheta;
+
+    public final Supplier<Double> IndexerSpeed;
+
+    public final Button shooterButton;
+    public final Button getDashboardShooterRPM;
+    public final Button indexerReverseButton;
+    public final Button smartIndexerButton;
+    public final Button smartShooterButton;
+    public final Button slowButton;
 
     /**
      * Constructs the Operator Interface.
      */
-    public OI() {
-        /* Class Variable Instantiation */
-        buttons = new HashMap<>();
-    
+    public OI() {    
         switch (Constants.OI.CONTROLLER) {
             case JOYSTICK:     
                 joystick = new Joystick(Constants.OI.JOY_PORT);
+
+                teleopX = () -> -joystick.getRawAxis(1);
+                teleopTheta = () -> joystick.getRawAxis(0);
+
+                IndexerSpeed = () -> joystick.getRawAxis(2);
+
+                shooterButton = new JoystickButton(joystick, 0);
+                getDashboardShooterRPM = new JoystickButton(joystick, 1);
+                indexerReverseButton = new JoystickButton(joystick, 2);
+                smartIndexerButton = new JoystickButton(joystick, 3);
+                smartShooterButton = new JoystickButton(joystick, 4);
+                slowButton = new JoystickButton(joystick, 5);
+
                 break;
+
+            default:
             case XBOX: 
                 xbox = new XboxController(Constants.OI.XBOX_PORT);
+
+                teleopX = () -> -xbox.getLeftY();
+                teleopTheta = () -> xbox.getLeftX();
+
+                IndexerSpeed = () -> xbox.getLeftTriggerAxis();
+
+                shooterButton = new JoystickButton(xbox, XboxController.Button.kLeftBumper.value);
+                getDashboardShooterRPM = new JoystickButton(xbox, XboxController.Button.kY.value);
+                indexerReverseButton = new JoystickButton(xbox, XboxController.Button.kB.value);
+                smartIndexerButton = new JoystickButton(xbox, XboxController.Button.kA.value);
+                smartShooterButton = new JoystickButton(xbox, XboxController.Button.kX.value);
+                slowButton = new JoystickButton(xbox, XboxController.Button.kRightBumper.value);
+
                 break;
 
         }
-    }
-
-    /**
-     * Add a particular button to the operator interface.
-     * Although these buttons could technically be accessed using the joystick object(s),
-     * this implementation makes it easier for the developers to understand
-     * the functionality of each button and allows for smoother implementation
-     * of configureButtonBindings() in RobotContainer.
-     * 
-     * @param name of the button.
-     * @param joystick that the button belongs to.
-     * @param number assigned to the button by the controller in the Driver Station.
-     */
-    public void addButton(String name, int number) {
-        switch (Constants.OI.CONTROLLER) {
-            case JOYSTICK:
-                buttons.put(name, new JoystickButton(joystick, number));
-                break;
-            case XBOX:
-                buttons.put(name, new JoystickButton(xbox, number));
-        }
-        //buttons.put(name, new JoystickButton(joystick, number));
-    }
-
-    /**
-     * @param name of a joystick button in the OI.
-     * @return A desired JoystickButton object from the OI.
-     */
-    public JoystickButton getButton(String name) {
-        return buttons.get(name);
-    }
-
-    public double getX(){
-        switch (Constants.OI.CONTROLLER) {
-            case JOYSTICK:
-                return -joystick.getRawAxis(1);
-            case XBOX: 
-                return -xbox.getLeftY();
-            default: 
-                throw new RuntimeException("No controller selected");
-        }
-        //return -joystick.getRawAxis(1);
-    }
-
-    public double getTheta(){
-        switch (Constants.OI.CONTROLLER) {
-            case JOYSTICK: 
-                return joystick.getRawAxis(0);
-            case XBOX: 
-                return xbox.getLeftX();
-            default: 
-                throw new RuntimeException("No controller selected");
-        }
-        //return joystick.getRawAxis(0);
     }
 }

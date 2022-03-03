@@ -14,6 +14,32 @@ package frc.robot;
  */
 public final class Constants {
 
+    public static final class SHOOTER {
+        public static final int TAL_SHOOTER_ID = 5;
+        public static final double RAMP_TIME = 0.2;
+        public static final double DEFAULT_SHOOTER_RPM = 4000;
+        public static final double RPM_TOLERANCE = 250;
+
+        public static final class FEEDFORWARD {
+            public static final double S = 0.9 * 0.77912;
+            public static final double V = 0.9 * 0.11497;
+            public static final double A = 0.9 * 0.015929;
+        }
+
+        public static final class PID {
+            public static final double P = 0.45;
+            public static final double I = 0.00012;
+            public static final double D = 55;
+        }
+    }
+
+    public static final class INDEXER {
+        public static final int TAL_INDEXER_ID = 6;
+        public static final int INDEXER_SWITCH_PORT = 9;
+        public static final double RAMP_TIME = 0.2;
+        public static final double DEADZONE = 0.1;
+    }
+
     public static final class DRIVE {
 
         public static final int TAL_LF_ID = 3;
@@ -67,6 +93,9 @@ public final class Constants {
 
         public static final double VX_COEFFICIENT = 1;
         public static final double OMEGA_COEFFICIENT = .5;
+
+        public static final double SLOW_VX_COEFFICIENT = .25;
+        public static final double SLOW_OMEGA_COEFFICIENT = .1;
     }
 
     public static final class OI {

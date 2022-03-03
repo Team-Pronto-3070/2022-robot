@@ -23,12 +23,14 @@ public class TeleopCommand extends CommandBase {
     //Overrides execute & periodically sends input to drivetrain
     @Override
     public void execute() {
-        SmartDashboard.putNumber("teleop_x", _oi.getX());
-        SmartDashboard.putNumber("teleop_theta", _oi.getTheta());
+        SmartDashboard.putNumber("teleop_x", _oi.teleopX.get());
+        SmartDashboard.putNumber("teleop_theta", _oi.teleopTheta.get());
 
         ///_drive.arcadeDrive(
         _drive.curvatureDrive(
-            (Math.abs(_oi.getX()) < Constants.TELEOP_COMMAND.JOY_STICK_DEADZONE) ? 0 : _oi.getX() * Constants.TELEOP_COMMAND.VX_COEFFICIENT, 
-            (Math.abs(_oi.getTheta()) < Constants.TELEOP_COMMAND.JOY_STICK_OMEGA_DEADZONE) ? 0 : _oi.getTheta() * Constants.TELEOP_COMMAND.OMEGA_COEFFICIENT);
+            (Math.abs(_oi.teleopX.get()) < Constants.TELEOP_COMMAND.JOY_STICK_DEADZONE) ?
+                    0 : _oi.teleopX.get() * (_oi.slowButton.get() ? Constants.TELEOP_COMMAND.SLOW_VX_COEFFICIENT : Constants.TELEOP_COMMAND.VX_COEFFICIENT), 
+            (Math.abs(_oi.teleopTheta.get()) < Constants.TELEOP_COMMAND.JOY_STICK_OMEGA_DEADZONE) ?
+                    0 : _oi.teleopTheta.get() * (_oi.slowButton.get() ? Constants.TELEOP_COMMAND.SLOW_OMEGA_COEFFICIENT : Constants.TELEOP_COMMAND.OMEGA_COEFFICIENT));
   }
 }
