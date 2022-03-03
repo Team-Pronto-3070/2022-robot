@@ -20,15 +20,16 @@ public class OI {
     public final Supplier<Double> teleopX;
     public final Supplier<Double> teleopTheta;
 
-    public final Supplier<Double> IndexerSpeed;
+    public final Supplier<Double> indexerForwardSpeed;
+    public final Supplier<Double> indexerReverseSpeed;
 
     public final Button highShooterButton;
     public final Button lowShooterButton;
-    public final Button indexerReverseButton;
     public final Button smartIndexerButton;
     public final Button highSmartShooterButton;
     public final Button lowSmartShooterButton;
     public final Button slowButton;
+    public final Button shooterOverrideButton;
 
     /**
      * Constructs the Operator Interface.
@@ -41,15 +42,16 @@ public class OI {
                 teleopX = () -> -joystick.getRawAxis(1);
                 teleopTheta = () -> joystick.getRawAxis(0);
 
-                IndexerSpeed = () -> joystick.getRawAxis(2);
+                indexerForwardSpeed = () -> joystick.getRawAxis(2);
+                indexerReverseSpeed = () -> -joystick.getRawAxis(2);
 
                 highShooterButton = new JoystickButton(joystick, 0);
                 lowShooterButton = new JoystickButton(joystick, 1);
-                indexerReverseButton = new JoystickButton(joystick, 2);
                 smartIndexerButton = new JoystickButton(joystick, 3);
                 highSmartShooterButton = new JoystickButton(joystick, 4);
                 lowSmartShooterButton = new JoystickButton(joystick, 5);
                 slowButton = new JoystickButton(joystick, 6);
+                shooterOverrideButton = new JoystickButton(joystick, 7);
 
                 break;
 
@@ -60,15 +62,16 @@ public class OI {
                 teleopX = () -> -xbox.getLeftY();
                 teleopTheta = () -> xbox.getLeftX();
 
-                IndexerSpeed = () -> xbox.getLeftTriggerAxis();
+                indexerForwardSpeed = () -> xbox.getLeftTriggerAxis();
+                indexerReverseSpeed = () -> xbox.getRightTriggerAxis();
 
                 highShooterButton = new JoystickButton(xbox, XboxController.Button.kLeftBumper.value);
                 lowShooterButton = new JoystickButton(xbox, XboxController.Button.kRightBumper.value);
-                indexerReverseButton = new JoystickButton(xbox, XboxController.Button.kB.value);
                 smartIndexerButton = new JoystickButton(xbox, XboxController.Button.kA.value);
                 highSmartShooterButton = new JoystickButton(xbox, XboxController.Button.kX.value);
                 lowSmartShooterButton = new JoystickButton(xbox, XboxController.Button.kY.value);
-                slowButton = new JoystickButton(xbox, XboxController.Button.kRightBumper.value);
+                slowButton = new JoystickButton(xbox, XboxController.Button.kB.value);
+                shooterOverrideButton = new JoystickButton(xbox, XboxController.Button.kStart.value);
 
                 break;
 

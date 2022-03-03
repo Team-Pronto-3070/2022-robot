@@ -28,7 +28,7 @@ public class Auto_Trajectory1Ball extends SequentialCommandGroup{
             drive.getTrajectoryConfig());
     
     addCommands(
-        new ShootCommand(drive, shooter, indexer),
+        new LowShootCommand(drive, shooter, indexer),
         new InstantCommand(() -> drive.resetPose(new Pose2d()), drive), 
         new ProntoRamseteCommand(outOfTarmac, drive),
         new InstantCommand(() -> drive.stop(), drive));

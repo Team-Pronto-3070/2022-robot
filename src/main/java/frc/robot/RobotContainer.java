@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -43,6 +44,9 @@ public class RobotContainer {
 
   //define a sendable chooser to select the autonomous command
   private SendableChooser<autoOptions> autoChooser = new SendableChooser<autoOptions>();
+
+  private Trigger indexerForwardTrigger;
+  private Trigger indexerReverseTrigger;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -63,14 +67,7 @@ public class RobotContainer {
 
     drive.setDefaultCommand(new TeleopCommand(drive, oi));
     shooter.setDefaultCommand(new RunCommand(shooter::stop, shooter));
-    indexer.setDefaultCommand(new RunCommand(() -> {SmartDashboard.putBoolean("temp indexer troubleshooting", oi.indexerReverseButton.getAsBoolean());
-                                                    SmartDashboard.putNumber("temp indexer troubleshooting 2",  oi.IndexerSpeed.get() > Constants.INDEXER.DEADZONE ? oi.IndexerSpeed.get() * (oi.indexerReverseButton.get() ? -1 : 1) : 0);
-                                                    SmartDashboard.putBoolean("xbox button 2", oi.xbox.getRawButton(2));
-                                                    SmartDashboard.putBoolean("plain get", oi.indexerReverseButton.get());
-                                                    
-                                                    indexer.set(oi.IndexerSpeed.get() > Constants.INDEXER.DEADZONE ? 
-                                                            oi.IndexerSpeed.get() * (oi.indexerReverseButton.get() ? -1 : 1) : 0);
-                                                }, indexer));
+    indexer.setDefaultCommand(new RunCommand(indexer::stop, indexer));
     
     // Configure the button bindings
     configureButtonBindings();
@@ -83,11 +80,17 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    indexerForwardTrigger = new Trigger(() -> oi.indexerForwardSpeed.get() > Constants.INDEXER.DEADZONE);
+    indexerReverseTrigger = new Trigger(() -> oi.indexerReverseSpeed.get() > Constants.INDEXER.DEADZONE);
+
+    indexerForwardTrigger.whileActiveContinuous(() -> indexer.set(oi.indexerForwardSpeed.get()), indexer);
+    indexerReverseTrigger.and(indexerForwardTrigger.negate()).whileActiveContinuous(() -> indexer.set(oi.indexerReverseSpeed.get()), indexer);
+
     oi.highShooterButton.whileHeld(() -> shooter.setRPM(SmartDashboard.getNumber("high shooter rpm", Constants.SHOOTER.HIGH_RPM)), shooter);
     oi.lowShooterButton.whileHeld(() -> shooter.setRPM(SmartDashboard.getNumber("low shooter rpm", Constants.SHOOTER.LOW_RPM)), shooter);
     oi.smartIndexerButton.and(indexer.indexerSwitchTrigger.negate()).whileActiveContinuous(() -> indexer.set(1), indexer);
-    oi.highSmartShooterButton.whenPressed(new HighShootCommand(drive, shooter, indexer));
-    oi.lowSmartShooterButton.whenPressed(new LowShootCommand(drive, shooter, indexer));
+    oi.highSmartShooterButton.whenPressed(new HighShootCommand(drive, shooter, indexer).withInterrupt(oi.shooterOverrideButton::get));
+    oi.lowSmartShooterButton.whenPressed(new LowShootCommand(drive, shooter, indexer).withInterrupt(oi.shooterOverrideButton::get));
   }
 
   /**
