@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.DemandType;
+//import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -45,7 +45,7 @@ public class Shooter_s extends SubsystemBase {
     tal_Shooter.config_kP(0, Constants.SHOOTER.PID.P);
     tal_Shooter.config_kI(0, Constants.SHOOTER.PID.I);
     tal_Shooter.config_kD(0, Constants.SHOOTER.PID.D);
-    tal_Shooter.config_kF(0, Constants.SHOOTER.FEEDFORWARD.V);
+//    tal_Shooter.config_kF(0, Constants.SHOOTER.FEEDFORWARD.V);
     
 //    shooter_bb = new BangBangController();
 //    shooter_PID = new PIDController(Constants.SHOOTER.PID.P, Constants.SHOOTER.PID.I, Constants.SHOOTER.PID.D);
@@ -59,14 +59,15 @@ public class Shooter_s extends SubsystemBase {
   }
 
   public double getRPM() {
-    return tal_Shooter.getSelectedSensorVelocity() * 600 / 2048;
+    return tal_Shooter.getSelectedSensorVelocity() * 600.0 / 2048.0;
   }
 
   public void setRPM(double rpm) {
 //    set(shooter_bb.calculate(getRPM(), rpm));
 //    set(MathUtil.clamp(shooter_PID.calculate(getRPM(), rpm), 0, 1));
-    tal_Shooter.set(ControlMode.Velocity, rpm * 2048 / 600,
-                    DemandType.ArbitraryFeedForward, Constants.SHOOTER.FEEDFORWARD.S / 12);
+//    tal_Shooter.set(ControlMode.Velocity, rpm * 2048 / 600,
+//                    DemandType.ArbitraryFeedForward, Constants.SHOOTER.FEEDFORWARD.S / 12);
+    tal_Shooter.set(ControlMode.Velocity, rpm * 2048.0 / 600.0);
   }
 
   public void setRPM() {
