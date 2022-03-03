@@ -81,6 +81,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     oi.shooterButton.whileHeld(shooter::setRPM, shooter);
     oi.getDashboardShooterRPM.whenPressed(shooter::setDashboardRPM, shooter);
+    oi.smartIndexerButton.and(indexer.indexerSwitchTrigger.negate()).whileActiveContinuous(() -> indexer.set(1), indexer);
   }
 
   /**

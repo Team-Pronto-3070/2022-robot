@@ -4,7 +4,9 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -20,6 +22,9 @@ public class Indexer_s extends SubsystemBase {
 
   private WPI_TalonSRX tal_Indexer;
 
+  private DigitalInput indexerSwitch;
+  public Trigger indexerSwitchTrigger;
+
   public Indexer_s() {
 
     tal_Indexer = new WPI_TalonSRX(Constants.INDEXER.TAL_INDEXER_ID);
@@ -27,6 +32,9 @@ public class Indexer_s extends SubsystemBase {
     tal_Indexer.setNeutralMode(NeutralMode.Brake);
     tal_Indexer.setInverted(true);
     tal_Indexer.configOpenloopRamp(Constants.INDEXER.RAMP_TIME);
+
+    indexerSwitch = new DigitalInput(Constants.INDEXER.INDEXER_SWITCH_PORT);
+    indexerSwitchTrigger = new Trigger(indexerSwitch::get);
   }
   
   public void set(double speed) {

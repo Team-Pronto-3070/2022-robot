@@ -25,6 +25,7 @@ public class OI {
     public final Button shooterButton;
     public final Button getDashboardShooterRPM;
     public final Button indexerReverseButton;
+    public final Button smartIndexerButton;
 
     /**
      * Constructs the Operator Interface.
@@ -42,6 +43,7 @@ public class OI {
                 shooterButton = new JoystickButton(joystick, 0);
                 getDashboardShooterRPM = new JoystickButton(joystick, 1);
                 indexerReverseButton = new JoystickButton(joystick, 2);
+                smartIndexerButton = new JoystickButton(joystick, 3);
 
                 break;
 
@@ -57,6 +59,7 @@ public class OI {
                 shooterButton = new JoystickButton(xbox, XboxController.Button.kLeftBumper.value);
                 getDashboardShooterRPM = new JoystickButton(xbox, XboxController.Button.kY.value);
                 indexerReverseButton = new JoystickButton(xbox, XboxController.Button.kB.value);
+                smartIndexerButton = new JoystickButton(xbox, XboxController.Button.kA.value);
 
                 break;
 
