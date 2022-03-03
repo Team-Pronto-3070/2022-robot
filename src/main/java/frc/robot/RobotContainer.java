@@ -15,6 +15,7 @@ import frc.robot.commands.Auto_Simple0Ball;
 import frc.robot.commands.Auto_Simple1Ball;
 import frc.robot.commands.Auto_Trajectory1Ball;
 import frc.robot.commands.Auto_TrajectoryTest;
+import frc.robot.commands.ShootCommand;
 import frc.robot.commands.TeleopCommand;
 import frc.robot.subsystems.Drive_s;
 import frc.robot.subsystems.Indexer_s;
@@ -82,6 +83,7 @@ public class RobotContainer {
     oi.shooterButton.whileHeld(shooter::setRPM, shooter);
     oi.getDashboardShooterRPM.whenPressed(shooter::setDashboardRPM, shooter);
     oi.smartIndexerButton.and(indexer.indexerSwitchTrigger.negate()).whileActiveContinuous(() -> indexer.set(1), indexer);
+    oi.smartShooterButton.whenPressed(new ShootCommand(drive, shooter, indexer));
   }
 
   /**

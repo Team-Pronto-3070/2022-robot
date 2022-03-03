@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.Drive_s;
 import frc.robot.subsystems.Indexer_s;
 import frc.robot.subsystems.Shooter_s;
@@ -15,10 +16,15 @@ public class ShootCommand extends SequentialCommandGroup{
             new ParallelRaceGroup(
                 new RunCommand(() -> shooter.setRPM(), shooter),
                 new SequentialCommandGroup(
-                    new WaitCommand(1),
+                    new WaitUntilCommand(shooter::atSetpoint),
+                    new WaitCommand(2),
                     new InstantCommand(() -> indexer.set(1), indexer),
-                    new WaitCommand(3),
+                    new WaitCommand(2),
                     new InstantCommand(() -> indexer.stop(), indexer)
-        )));
+                )
+            ),
+            new InstantCommand(() -> indexer.stop(), indexer),
+            new InstantCommand(() -> shooter.stop(), shooter)
+        );
     }
 }

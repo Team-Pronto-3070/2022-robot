@@ -18,6 +18,7 @@ public final class Constants {
         public static final int TAL_SHOOTER_ID = 5;
         public static final double RAMP_TIME = 0.2;
         public static final double DEFAULT_SHOOTER_RPM = 4000;
+        public static final double RPM_TOLERANCE = 250;
 
         public static final class FEEDFORWARD {
             public static final double S = 0.9 * 0.77912;
@@ -92,6 +93,9 @@ public final class Constants {
 
         public static final double VX_COEFFICIENT = 1;
         public static final double OMEGA_COEFFICIENT = .5;
+
+        public static final double SLOW_VX_COEFFICIENT = .25;
+        public static final double SLOW_OMEGA_COEFFICIENT = .1;
     }
 
     public static final class OI {

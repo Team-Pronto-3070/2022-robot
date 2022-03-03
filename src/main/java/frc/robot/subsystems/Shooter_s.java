@@ -82,6 +82,10 @@ public class Shooter_s extends SubsystemBase {
     tal_Shooter.set(0);
   }
 
+  public Boolean atSetpoint() {
+    return Math.abs(getRPM() - shooterRPM) < Constants.SHOOTER.RPM_TOLERANCE;
+  }
+
   @Override
   public void periodic() {
     SmartDashboard.putNumber("current shooter rpm", getRPM());
