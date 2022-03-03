@@ -15,7 +15,8 @@ import frc.robot.commands.Auto_Simple0Ball;
 import frc.robot.commands.Auto_Simple1Ball;
 import frc.robot.commands.Auto_Trajectory1Ball;
 import frc.robot.commands.Auto_TrajectoryTest;
-import frc.robot.commands.ShootCommand;
+import frc.robot.commands.HighShootCommand;
+import frc.robot.commands.LowShootCommand;
 import frc.robot.commands.TeleopCommand;
 import frc.robot.subsystems.Drive_s;
 import frc.robot.subsystems.Indexer_s;
@@ -45,9 +46,6 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // Configure the button bindings
-    configureButtonBindings();
-
     NetworkTableInstance.getDefault().setUpdateRate(0.01);
 
     //add options to the chooser
@@ -60,6 +58,9 @@ public class RobotContainer {
     //put the chooser on the dashboard
     SmartDashboard.putData(autoChooser);
 
+    SmartDashboard.putNumber("high shooter rpm", Constants.SHOOTER.HIGH_RPM);
+    SmartDashboard.putNumber("low shooter rpm", Constants.SHOOTER.LOW_RPM);
+
     drive.setDefaultCommand(new TeleopCommand(drive, oi));
     shooter.setDefaultCommand(new RunCommand(shooter::stop, shooter));
     indexer.setDefaultCommand(new RunCommand(() -> {SmartDashboard.putBoolean("temp indexer troubleshooting", oi.indexerReverseButton.getAsBoolean());
@@ -70,7 +71,9 @@ public class RobotContainer {
                                                     indexer.set(oi.IndexerSpeed.get() > Constants.INDEXER.DEADZONE ? 
                                                             oi.IndexerSpeed.get() * (oi.indexerReverseButton.get() ? -1 : 1) : 0);
                                                 }, indexer));
-//    indexer.setDefaultCommand(new RunCommand(() -> SmartDashboard.putBoolean("temp indexer troubleshooting", oi.indexerReverseButton.get()), indexer));
+    
+    // Configure the button bindings
+    configureButtonBindings();
   }
 
   /**
@@ -80,10 +83,11 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    oi.shooterButton.whileHeld(shooter::setRPM, shooter);
-    oi.getDashboardShooterRPM.whenPressed(shooter::setDashboardRPM, shooter);
+    oi.highShooterButton.whileHeld(() -> shooter.setRPM(SmartDashboard.getNumber("high shooter rpm", Constants.SHOOTER.HIGH_RPM)), shooter);
+    oi.lowShooterButton.whileHeld(() -> shooter.setRPM(SmartDashboard.getNumber("low shooter rpm", Constants.SHOOTER.LOW_RPM)), shooter);
     oi.smartIndexerButton.and(indexer.indexerSwitchTrigger.negate()).whileActiveContinuous(() -> indexer.set(1), indexer);
-    oi.smartShooterButton.whenPressed(new ShootCommand(drive, shooter, indexer));
+    oi.highSmartShooterButton.whenPressed(new HighShootCommand(drive, shooter, indexer));
+    oi.lowSmartShooterButton.whenPressed(new LowShootCommand(drive, shooter, indexer));
   }
 
   /**

@@ -22,11 +22,12 @@ public class OI {
 
     public final Supplier<Double> IndexerSpeed;
 
-    public final Button shooterButton;
-    public final Button getDashboardShooterRPM;
+    public final Button highShooterButton;
+    public final Button lowShooterButton;
     public final Button indexerReverseButton;
     public final Button smartIndexerButton;
-    public final Button smartShooterButton;
+    public final Button highSmartShooterButton;
+    public final Button lowSmartShooterButton;
     public final Button slowButton;
 
     /**
@@ -42,12 +43,13 @@ public class OI {
 
                 IndexerSpeed = () -> joystick.getRawAxis(2);
 
-                shooterButton = new JoystickButton(joystick, 0);
-                getDashboardShooterRPM = new JoystickButton(joystick, 1);
+                highShooterButton = new JoystickButton(joystick, 0);
+                lowShooterButton = new JoystickButton(joystick, 1);
                 indexerReverseButton = new JoystickButton(joystick, 2);
                 smartIndexerButton = new JoystickButton(joystick, 3);
-                smartShooterButton = new JoystickButton(joystick, 4);
-                slowButton = new JoystickButton(joystick, 5);
+                highSmartShooterButton = new JoystickButton(joystick, 4);
+                lowSmartShooterButton = new JoystickButton(joystick, 5);
+                slowButton = new JoystickButton(joystick, 6);
 
                 break;
 
@@ -60,11 +62,12 @@ public class OI {
 
                 IndexerSpeed = () -> xbox.getLeftTriggerAxis();
 
-                shooterButton = new JoystickButton(xbox, XboxController.Button.kLeftBumper.value);
-                getDashboardShooterRPM = new JoystickButton(xbox, XboxController.Button.kY.value);
+                highShooterButton = new JoystickButton(xbox, XboxController.Button.kLeftBumper.value);
+                lowShooterButton = new JoystickButton(xbox, XboxController.Button.kRightBumper.value);
                 indexerReverseButton = new JoystickButton(xbox, XboxController.Button.kB.value);
                 smartIndexerButton = new JoystickButton(xbox, XboxController.Button.kA.value);
-                smartShooterButton = new JoystickButton(xbox, XboxController.Button.kX.value);
+                highSmartShooterButton = new JoystickButton(xbox, XboxController.Button.kX.value);
+                lowSmartShooterButton = new JoystickButton(xbox, XboxController.Button.kY.value);
                 slowButton = new JoystickButton(xbox, XboxController.Button.kRightBumper.value);
 
                 break;

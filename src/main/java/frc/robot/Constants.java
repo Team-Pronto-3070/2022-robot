@@ -17,7 +17,8 @@ public final class Constants {
     public static final class SHOOTER {
         public static final int TAL_SHOOTER_ID = 5;
         public static final double RAMP_TIME = 0.2;
-        public static final double DEFAULT_SHOOTER_RPM = 4000;
+        public static final double HIGH_RPM = 4500;
+        public static final double LOW_RPM = 1500;
         public static final double RPM_TOLERANCE = 250;
 
         public static final class FEEDFORWARD {
