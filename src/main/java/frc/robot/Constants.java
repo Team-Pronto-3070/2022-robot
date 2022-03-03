@@ -19,6 +19,12 @@ public final class Constants {
         public static final double RAMP_TIME = 0.2;
         public static final double DEFAULT_SHOOTER_RPM = 3000;
 
+        public static final class FEEDFORWARD {
+            public static final double S = 0.9 * 0.77912;
+            public static final double V = 0.9 * 0.11497;
+            public static final double A = 0.9 * 0.015929;
+        }
+
         public static final class PID {
             public static final double P = 1000000;
             public static final double I = 0;

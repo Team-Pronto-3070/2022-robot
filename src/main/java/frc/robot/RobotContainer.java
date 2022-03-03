@@ -62,7 +62,7 @@ public class RobotContainer {
     drive.setDefaultCommand(new TeleopCommand(drive, oi));
     shooter.setDefaultCommand(new RunCommand(shooter::stop, shooter));
     indexer.setDefaultCommand(new RunCommand(() -> {SmartDashboard.putBoolean("temp indexer troubleshooting", oi.indexerReverseButton.getAsBoolean());
-                                                    SmartDashboard.putNumber("temp indexer troubleshooting 2",  oi.IndexerSpeed.get() * (oi.indexerReverseButton.get() ? -1 : 1));
+                                                    SmartDashboard.putNumber("temp indexer troubleshooting 2",  oi.IndexerSpeed.get() > Constants.INDEXER.DEADZONE ? oi.IndexerSpeed.get() * (oi.indexerReverseButton.get() ? -1 : 1) : 0);
                                                     SmartDashboard.putBoolean("xbox button 2", oi.xbox.getRawButton(2));
                                                     SmartDashboard.putBoolean("plain get", oi.indexerReverseButton.get());
                                                     
