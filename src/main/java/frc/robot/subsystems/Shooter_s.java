@@ -30,8 +30,8 @@ public class Shooter_s extends SubsystemBase {
 //  private BangBangController shooter_bb;
 //  private PIDController shooter_PID;
 //  private SimpleMotorFeedforward shooter_ff;
-  private double shooterRPM = Constants.SHOOTER.DEFAULT_SHOOTER_RPM;
-  
+
+  private double setpoint = 0;
 
   public Shooter_s() {
 
@@ -50,8 +50,6 @@ public class Shooter_s extends SubsystemBase {
 //    shooter_bb = new BangBangController();
 //    shooter_PID = new PIDController(Constants.SHOOTER.PID.P, Constants.SHOOTER.PID.I, Constants.SHOOTER.PID.D);
 //    shooter_ff = new SimpleMotorFeedforward(Constants.SHOOTER.FEEDFORWARD.S, Constants.SHOOTER.FEEDFORWARD.V, Constants.SHOOTER.FEEDFORWARD.A);
-
-    SmartDashboard.putNumber("shooter rpm", Constants.SHOOTER.DEFAULT_SHOOTER_RPM);
   }
 
   public void set(double speed) {
@@ -63,6 +61,8 @@ public class Shooter_s extends SubsystemBase {
   }
 
   public void setRPM(double rpm) {
+    setpoint = rpm;
+
 //    set(shooter_bb.calculate(getRPM(), rpm));
 //    set(MathUtil.clamp(shooter_PID.calculate(getRPM(), rpm), 0, 1));
 //    tal_Shooter.set(ControlMode.Velocity, rpm * 2048 / 600,
@@ -70,20 +70,13 @@ public class Shooter_s extends SubsystemBase {
     tal_Shooter.set(ControlMode.Velocity, rpm * 2048.0 / 600.0);
   }
 
-  public void setRPM() {
-    setRPM(shooterRPM);
-  }
-
-  public void setDashboardRPM() {
-    shooterRPM = SmartDashboard.getNumber("shooter rpm", Constants.SHOOTER.DEFAULT_SHOOTER_RPM);
-  }
-
   public void stop() {
+    setpoint = 0;
     tal_Shooter.set(0);
   }
 
   public Boolean atSetpoint() {
-    return Math.abs(getRPM() - shooterRPM) < Constants.SHOOTER.RPM_TOLERANCE;
+    return Math.abs(getRPM() - setpoint) < Constants.SHOOTER.RPM_TOLERANCE;
   }
 
   @Override

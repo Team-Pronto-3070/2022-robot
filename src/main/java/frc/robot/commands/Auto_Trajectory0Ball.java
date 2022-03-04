@@ -13,8 +13,8 @@ import frc.robot.subsystems.Drive_s;
 import frc.robot.subsystems.Indexer_s;
 import frc.robot.subsystems.Shooter_s;
 
-public class Auto_Trajectory1Ball extends SequentialCommandGroup{
-    public Auto_Trajectory1Ball(Drive_s drive, Shooter_s shooter, Indexer_s indexer) {
+public class Auto_Trajectory0Ball extends SequentialCommandGroup{
+    public Auto_Trajectory0Ball(Drive_s drive, Shooter_s shooter, Indexer_s indexer) {
     
     // ~ 9.5 feet
     Trajectory outOfTarmac =
@@ -30,7 +30,6 @@ public class Auto_Trajectory1Ball extends SequentialCommandGroup{
             drive.getTrajectoryConfig());
     
     addCommands(
-        new LowShootCommand(drive, shooter, indexer),
         new InstantCommand(() -> drive.resetPose(new Pose2d()), drive), 
         new ProntoRamseteCommand(outOfTarmac, drive),
         new InstantCommand(() -> drive.stop(), drive));

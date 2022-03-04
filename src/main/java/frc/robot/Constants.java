@@ -17,7 +17,8 @@ public final class Constants {
     public static final class SHOOTER {
         public static final int TAL_SHOOTER_ID = 5;
         public static final double RAMP_TIME = 0.2;
-        public static final double DEFAULT_SHOOTER_RPM = 4000;
+        public static final double HIGH_RPM = 4500;
+        public static final double LOW_RPM = 1500;
         public static final double RPM_TOLERANCE = 250;
 
         public static final class FEEDFORWARD {
@@ -80,9 +81,9 @@ public final class Constants {
         }
 
         public static final class FEEDFORWARD {
-            public static final double ks = 0.62944;
-            public static final double kv = 2.4241;
-            public static final double ka = 0.17373;
+            public static final double ks = 0.64112;
+            public static final double kv = 2.3403;
+            public static final double ka = 0.33124;
         }
 
     }
@@ -95,13 +96,13 @@ public final class Constants {
         public static final double OMEGA_COEFFICIENT = .5;
 
         public static final double SLOW_VX_COEFFICIENT = .25;
-        public static final double SLOW_OMEGA_COEFFICIENT = .1;
+        public static final double SLOW_OMEGA_COEFFICIENT = .2;
     }
 
     public static final class OI {
 
-        public static final int JOY_PORT = 0;
-        public static final int XBOX_PORT = 2;
+        public static final int JOY_PORT = 3;
+        public static final int XBOX_PORT = 0;
 
         public static final Controller CONTROLLER =  Controller.XBOX;
 

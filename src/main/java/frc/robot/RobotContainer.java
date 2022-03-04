@@ -11,11 +11,14 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.Auto_1BallNoMove;
 import frc.robot.commands.Auto_Simple0Ball;
 import frc.robot.commands.Auto_Simple1Ball;
+import frc.robot.commands.Auto_Trajectory0Ball;
 import frc.robot.commands.Auto_Trajectory1Ball;
 import frc.robot.commands.Auto_TrajectoryTest;
-import frc.robot.commands.ShootCommand;
+import frc.robot.commands.HighShootCommand;
+import frc.robot.commands.LowShootCommand;
 import frc.robot.commands.TeleopCommand;
 import frc.robot.subsystems.Drive_s;
 import frc.robot.subsystems.Indexer_s;
@@ -24,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -38,16 +42,16 @@ public class RobotContainer {
   private final Shooter_s shooter = new Shooter_s();
   private final Indexer_s indexer = new Indexer_s();
 
-  private enum autoOptions {NONE, TRAJECTORY_TEST, SIMPLE_1_BALL, TRAJECTORY_1_BALL, SIMPLE_0_BALL}
+  private enum autoOptions {NONE, TRAJECTORY_TEST, SIMPLE_1_BALL, TRAJECTORY_1_BALL, SIMPLE_0_BALL, TRAJECTORY_0_BALL, NO_MOVE_1_BALL}
 
   //define a sendable chooser to select the autonomous command
   private SendableChooser<autoOptions> autoChooser = new SendableChooser<autoOptions>();
 
+  private Trigger indexerForwardTrigger;
+  private Trigger indexerReverseTrigger;
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // Configure the button bindings
-    configureButtonBindings();
-
     NetworkTableInstance.getDefault().setUpdateRate(0.01);
 
     //add options to the chooser
@@ -56,21 +60,21 @@ public class RobotContainer {
     autoChooser.addOption("dead-reckoning 1 ball", autoOptions.SIMPLE_1_BALL);
     autoChooser.addOption("trajectory 1 ball", autoOptions.TRAJECTORY_1_BALL);
     autoChooser.addOption("NOSHOOTING dead-reckoning 0 ball", autoOptions.SIMPLE_0_BALL);
+    autoChooser.addOption("NOSHOOTING trajectory 0 ball", autoOptions.TRAJECTORY_0_BALL);
+    autoChooser.addOption("1 ball no move", autoOptions.NO_MOVE_1_BALL);
 
     //put the chooser on the dashboard
     SmartDashboard.putData(autoChooser);
 
+    SmartDashboard.putNumber("high shooter rpm", Constants.SHOOTER.HIGH_RPM);
+    SmartDashboard.putNumber("low shooter rpm", Constants.SHOOTER.LOW_RPM);
+
     drive.setDefaultCommand(new TeleopCommand(drive, oi));
     shooter.setDefaultCommand(new RunCommand(shooter::stop, shooter));
-    indexer.setDefaultCommand(new RunCommand(() -> {SmartDashboard.putBoolean("temp indexer troubleshooting", oi.indexerReverseButton.getAsBoolean());
-                                                    SmartDashboard.putNumber("temp indexer troubleshooting 2",  oi.IndexerSpeed.get() > Constants.INDEXER.DEADZONE ? oi.IndexerSpeed.get() * (oi.indexerReverseButton.get() ? -1 : 1) : 0);
-                                                    SmartDashboard.putBoolean("xbox button 2", oi.xbox.getRawButton(2));
-                                                    SmartDashboard.putBoolean("plain get", oi.indexerReverseButton.get());
-                                                    
-                                                    indexer.set(oi.IndexerSpeed.get() > Constants.INDEXER.DEADZONE ? 
-                                                            oi.IndexerSpeed.get() * (oi.indexerReverseButton.get() ? -1 : 1) : 0);
-                                                }, indexer));
-//    indexer.setDefaultCommand(new RunCommand(() -> SmartDashboard.putBoolean("temp indexer troubleshooting", oi.indexerReverseButton.get()), indexer));
+    indexer.setDefaultCommand(new RunCommand(indexer::stop, indexer));
+    
+    // Configure the button bindings
+    configureButtonBindings();
   }
 
   /**
@@ -80,10 +84,17 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    oi.shooterButton.whileHeld(shooter::setRPM, shooter);
-    oi.getDashboardShooterRPM.whenPressed(shooter::setDashboardRPM, shooter);
+    indexerForwardTrigger = new Trigger(() -> oi.indexerForwardSpeed.get() > Constants.INDEXER.DEADZONE);
+    indexerReverseTrigger = new Trigger(() -> oi.indexerReverseSpeed.get() > Constants.INDEXER.DEADZONE);
+
+    indexerForwardTrigger.whileActiveContinuous(() -> indexer.set(oi.indexerForwardSpeed.get()), indexer);
+    indexerReverseTrigger.and(indexerForwardTrigger.negate()).whileActiveContinuous(() -> indexer.set(-oi.indexerReverseSpeed.get()), indexer);
+
+    oi.highShooterButton.whileHeld(() -> shooter.setRPM(SmartDashboard.getNumber("high shooter rpm", Constants.SHOOTER.HIGH_RPM)), shooter);
+    oi.lowShooterButton.whileHeld(() -> shooter.setRPM(SmartDashboard.getNumber("low shooter rpm", Constants.SHOOTER.LOW_RPM)), shooter);
     oi.smartIndexerButton.and(indexer.indexerSwitchTrigger.negate()).whileActiveContinuous(() -> indexer.set(1), indexer);
-    oi.smartShooterButton.whenPressed(new ShootCommand(drive, shooter, indexer));
+    oi.highSmartShooterButton.whenPressed(new HighShootCommand(drive, shooter, indexer).withInterrupt(oi.shooterOverrideButton::get));
+    oi.lowSmartShooterButton.whenPressed(new LowShootCommand(drive, shooter, indexer).withInterrupt(oi.shooterOverrideButton::get));
   }
 
   /**
@@ -98,7 +109,9 @@ public class RobotContainer {
                                 Map.entry(autoOptions.TRAJECTORY_TEST, new Auto_TrajectoryTest(drive)),
                                 Map.entry(autoOptions.SIMPLE_1_BALL, new Auto_Simple1Ball(drive, shooter, indexer)),
                                 Map.entry(autoOptions.TRAJECTORY_1_BALL, new Auto_Trajectory1Ball(drive, shooter, indexer)),
-                                Map.entry(autoOptions.SIMPLE_0_BALL, new Auto_Simple0Ball(drive, shooter, indexer))
+                                Map.entry(autoOptions.SIMPLE_0_BALL, new Auto_Simple0Ball(drive, shooter, indexer)),
+                                Map.entry(autoOptions.TRAJECTORY_0_BALL, new Auto_Trajectory0Ball(drive, shooter, indexer)),
+                                Map.entry(autoOptions.NO_MOVE_1_BALL, new Auto_1BallNoMove(drive, shooter, indexer))
                     ), autoChooser::getSelected);
   }
 }
