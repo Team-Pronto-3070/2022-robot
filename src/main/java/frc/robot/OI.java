@@ -66,11 +66,11 @@ public class OI {
                 indexerReverseSpeed = () -> xbox.getRightTriggerAxis();
 
                 highShooterButton = new JoystickButton(xbox, XboxController.Button.kLeftBumper.value);
-                lowShooterButton = new JoystickButton(xbox, XboxController.Button.kRightBumper.value);
+                lowShooterButton = new JoystickButton(xbox, XboxController.Button.kB.value);
                 smartIndexerButton = new JoystickButton(xbox, XboxController.Button.kA.value);
                 highSmartShooterButton = new JoystickButton(xbox, XboxController.Button.kX.value);
                 lowSmartShooterButton = new JoystickButton(xbox, XboxController.Button.kY.value);
-                slowButton = new JoystickButton(xbox, XboxController.Button.kB.value);
+                slowButton = new JoystickButton(xbox, XboxController.Button.kRightBumper.value);
                 shooterOverrideButton = new JoystickButton(xbox, XboxController.Button.kStart.value);
 
                 break;
