@@ -12,7 +12,14 @@ import frc.robot.subsystems.Drive_s;
 import frc.robot.subsystems.Indexer_s;
 import frc.robot.subsystems.Shooter_s;
 
+// High Hub Autonomous Command; sets robot to shoot for the high hub
 public class HighShootCommand extends SequentialCommandGroup{
+    /**
+     * "High Hub" shooting for the robot
+     * @param drive
+     * @param shooter
+     * @param indexer
+     */
     public HighShootCommand(Drive_s drive, Shooter_s shooter, Indexer_s indexer){
         addCommands(
             new ParallelRaceGroup(

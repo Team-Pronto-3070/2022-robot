@@ -12,7 +12,14 @@ import frc.robot.subsystems.Drive_s;
 import frc.robot.subsystems.Indexer_s;
 import frc.robot.subsystems.Shooter_s;
 
+// Low Hub Autonomous Command; sets robot to shoot for the lower hub
 public class LowShootCommand extends SequentialCommandGroup{
+    /**
+    * "Low Hub" shooting for the robot
+    * @param drive
+    * @param shooter
+    * @param indexer 
+    */
     public LowShootCommand(Drive_s drive, Shooter_s shooter, Indexer_s indexer){
         addCommands(
             new ParallelRaceGroup(

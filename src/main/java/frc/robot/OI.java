@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * Framework for the operator interface for the robot.
  * 
  * Contains necessary sensors and manual control objects (i.e. joysticks).
+ * Assigns different functions of the robot to multiple inputs (i.e. bumper, button).
  */
 public class OI {
     

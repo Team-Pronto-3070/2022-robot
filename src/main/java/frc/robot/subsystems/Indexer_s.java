@@ -15,9 +15,9 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import frc.robot.Constants;
 
 /**
- * Shooter Subsystem
+ * Shooter Subsystem: Indexer
  * 
- * Handles all the motors in the shooter
+ * Handles all the motors in the indexer
  */
 public class Indexer_s extends SubsystemBase {
 

@@ -24,7 +24,9 @@ import frc.robot.Constants;
 
 /**
  * Drive subsystem
+ * Contains declarations/assignment of talons, different drive modes, and positioning.
  */
+
 public class Drive_s extends SubsystemBase{
     
     private WPI_TalonFX talLF;
@@ -114,10 +116,20 @@ public class Drive_s extends SubsystemBase{
         diffDrive.arcadeDrive(forwardSpeed, rotation);
     }
 
+    /**
+     * Curvature drive mode for the robot
+     * @param speed
+     * @param rotation
+     */
     public void curvatureDrive(double speed, double rotation) {
         diffDrive.curvatureDrive(speed, rotation, true);
     }
 
+    /**
+     * Tank drive mode for the robot
+     * @param left
+     * @param right
+     */
     public void tankDriveVolts(double left, double right) {
         talLF.setVoltage(left);
         talRF.setVoltage(right);
@@ -137,6 +149,10 @@ public class Drive_s extends SubsystemBase{
         return Rotation2d.fromDegrees(gyro.getAngle());
     }
 
+    /**
+     * Resets position for the robot w/talons & odometry (gyro).
+     * @param newPose
+     */
     public void resetPose(Pose2d newPose) {
         talLF.setSelectedSensorPosition(0);
         talRF.setSelectedSensorPosition(0);

@@ -20,10 +20,12 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import frc.robot.Constants;
 
 /**
- * Shooter Subsystem
+ * Shooter Subsystem: Shooter
  * 
- * Handles all the motors in the shooter
+ * Handles all the motors in the shooter.
+ * 
  */
+
 public class Shooter_s extends SubsystemBase {
 
   private WPI_TalonFX tal_Shooter;
@@ -67,6 +69,7 @@ public class Shooter_s extends SubsystemBase {
 //    set(MathUtil.clamp(shooter_PID.calculate(getRPM(), rpm), 0, 1));
 //    tal_Shooter.set(ControlMode.Velocity, rpm * 2048 / 600,
 //                    DemandType.ArbitraryFeedForward, Constants.SHOOTER.FEEDFORWARD.S / 12);
+
     tal_Shooter.set(ControlMode.Velocity, rpm * 2048.0 / 600.0);
   }
 
