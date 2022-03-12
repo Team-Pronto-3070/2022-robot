@@ -12,6 +12,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.Auto_1BallNoMove;
+import frc.robot.commands.Auto_2Ballv1;
+import frc.robot.commands.Auto_2Ballv2;
+import frc.robot.commands.Auto_2Ballv3;
 import frc.robot.commands.Auto_Simple0Ball;
 import frc.robot.commands.Auto_Simple1Ball;
 import frc.robot.commands.Auto_Trajectory0Ball;
@@ -29,6 +32,9 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -42,7 +48,10 @@ public class RobotContainer {
   private final Shooter_s shooter = new Shooter_s();
   private final Indexer_s indexer = new Indexer_s();
 
-  private enum autoOptions {NONE, TRAJECTORY_TEST, SIMPLE_1_BALL, TRAJECTORY_1_BALL, SIMPLE_0_BALL, TRAJECTORY_0_BALL, NO_MOVE_1_BALL}
+  private UsbCamera camera;
+
+  private enum autoOptions {NONE, TRAJECTORY_TEST, SIMPLE_1_BALL, TRAJECTORY_1_BALL,
+            SIMPLE_0_BALL, TRAJECTORY_0_BALL, NO_MOVE_1_BALL, V1_2_BALL, V2_2_BALL, V3_2_BALL}
 
   //define a sendable chooser to select the autonomous command
   private SendableChooser<autoOptions> autoChooser = new SendableChooser<autoOptions>();
@@ -53,6 +62,9 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     NetworkTableInstance.getDefault().setUpdateRate(0.01);
+    camera = CameraServer.startAutomaticCapture();
+    camera.setResolution(160, 120);
+    camera.setFPS(30);
 
     //add options to the chooser
     autoChooser.setDefaultOption("None", autoOptions.NONE);
@@ -62,6 +74,9 @@ public class RobotContainer {
     autoChooser.addOption("NOSHOOTING dead-reckoning 0 ball", autoOptions.SIMPLE_0_BALL);
     autoChooser.addOption("NOSHOOTING trajectory 0 ball", autoOptions.TRAJECTORY_0_BALL);
     autoChooser.addOption("1 ball no move", autoOptions.NO_MOVE_1_BALL);
+    autoChooser.addOption("2 ball v1", autoOptions.V1_2_BALL);
+    autoChooser.addOption("2 ball v2", autoOptions.V2_2_BALL);
+    autoChooser.addOption("2 ball v3", autoOptions.V3_2_BALL);
 
     //put the chooser on the dashboard
     SmartDashboard.putData(autoChooser);
@@ -111,7 +126,10 @@ public class RobotContainer {
                                 Map.entry(autoOptions.TRAJECTORY_1_BALL, new Auto_Trajectory1Ball(drive, shooter, indexer)),
                                 Map.entry(autoOptions.SIMPLE_0_BALL, new Auto_Simple0Ball(drive, shooter, indexer)),
                                 Map.entry(autoOptions.TRAJECTORY_0_BALL, new Auto_Trajectory0Ball(drive, shooter, indexer)),
-                                Map.entry(autoOptions.NO_MOVE_1_BALL, new Auto_1BallNoMove(drive, shooter, indexer))
+                                Map.entry(autoOptions.NO_MOVE_1_BALL, new Auto_1BallNoMove(drive, shooter, indexer)),
+                                Map.entry(autoOptions.V1_2_BALL, new Auto_2Ballv1(drive, shooter, indexer)),
+                                Map.entry(autoOptions.V2_2_BALL, new Auto_2Ballv2(drive, shooter, indexer)),
+                                Map.entry(autoOptions.V3_2_BALL, new Auto_2Ballv3(drive, shooter, indexer))
                     ), autoChooser::getSelected);
   }
 }
