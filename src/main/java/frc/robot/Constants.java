@@ -41,6 +41,35 @@ public final class Constants {
         public static final double DEADZONE = 0.1;
     }
 
+    public static final class INTAKE {
+        public static final int TAL_INTAKE_ID = 7;
+        public static final int TAL_EXTENDER_ID = 8;
+
+        public static final double FORWARD_SPEED = 0.5;
+        public static final double REVERSE_SPEED = 0.5;
+
+        public static final int[] ENCODER_PORTS = new int[] {7, 8};
+        public static final double ENCODER_DISTANCE_PER_PULSE = 0; //units: radians
+                                                            //2 * pi / 2048 ppr * (18 / window motor gear)
+        public static final double MAX_VELOCITY = 1;
+        public static final double MAX_ACCELERATION = 1;
+        public static final double DOWN_POSITION = 0; //units: radians from horizontal
+        public static final double UP_POSITION = -1 * Math.PI / 2; //vertical
+        
+        public static final class EXTENDER_PID {
+            public static final double P = 1;
+            public static final double I = 0;
+            public static final double D = 0;
+        }
+
+        public static final class EXTENDER_FEEDFORWARD {
+            public static final double S = 0;
+            public static final double G = 0;
+            public static final double V = 0;
+            public static final double A = 0;
+        }
+    }
+
     public static final class DRIVE {
 
         public static final int TAL_LF_ID = 3;

@@ -95,6 +95,8 @@ public class Drive_s extends SubsystemBase{
                                         Constants.DRIVE.FEEDFORWARD.ka);
 
         diffDrive = new DifferentialDrive(talLF, talRF);
+        diffDrive.setSafetyEnabled(false);
+
         kinematics = new DifferentialDriveKinematics(Constants.DRIVE.TRACK_WIDTH);
         odometry = new DifferentialDriveOdometry(getGyro());
 
