@@ -20,8 +20,11 @@ public class OI {
     public final Supplier<Double> teleopX;
     public final Supplier<Double> teleopTheta;
 
-    public final Supplier<Double> indexerForwardSpeed;
+//    public final Supplier<Double> indexerForwardSpeed;
     public final Supplier<Double> indexerReverseSpeed;
+
+    public final Supplier<Double> intakeSpeed;
+    public final Supplier<Double> extenderSpeed;
 
     public final Button highShooterButton;
     public final Button lowShooterButton;
@@ -42,8 +45,11 @@ public class OI {
                 teleopX = () -> -joystick.getRawAxis(1);
                 teleopTheta = () -> joystick.getRawAxis(0);
 
-                indexerForwardSpeed = () -> joystick.getRawAxis(2);
+                //indexerForwardSpeed = () -> joystick.getRawAxis(2);
                 indexerReverseSpeed = () -> -joystick.getRawAxis(2);
+
+                intakeSpeed = () -> joystick.getRawAxis(2);
+                extenderSpeed = () -> joystick.getRawAxis(3);
 
                 highShooterButton = new JoystickButton(joystick, 0);
                 lowShooterButton = new JoystickButton(joystick, 1);
@@ -62,8 +68,11 @@ public class OI {
                 teleopX = () -> -xbox.getLeftY();
                 teleopTheta = () -> xbox.getLeftX();
 
-                indexerForwardSpeed = () -> xbox.getLeftTriggerAxis();
+                //indexerForwardSpeed = () -> xbox.getLeftTriggerAxis();
                 indexerReverseSpeed = () -> xbox.getRightTriggerAxis();
+
+                intakeSpeed = () -> xbox.getLeftTriggerAxis();
+                extenderSpeed = () -> xbox.getRightY();
 
                 highShooterButton = new JoystickButton(xbox, XboxController.Button.kLeftBumper.value);
                 lowShooterButton = new JoystickButton(xbox, XboxController.Button.kB.value);

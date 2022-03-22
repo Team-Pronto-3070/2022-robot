@@ -15,26 +15,26 @@ public class Intake_s extends SubsystemBase {
 
     private WPI_TalonSRX tal_Intake;
     private WPI_TalonSRX tal_Extender;
-
+/*
     private Encoder extenderEncoder;
 
     private ArmFeedforward extenderFF;
     private ProfiledPIDController extenderPID;
-
+*/
     public Intake_s() {
 
         tal_Intake = new WPI_TalonSRX(Constants.INTAKE.TAL_INTAKE_ID);
         tal_Intake.configFactoryDefault();
-        tal_Intake.setNeutralMode(NeutralMode.Brake);
-        tal_Intake.setInverted(false);
+        tal_Intake.setNeutralMode(NeutralMode.Coast);
+        tal_Intake.setInverted(true);
         tal_Intake.configOpenloopRamp(Constants.DRIVE.RAMP_TIME);
 
         tal_Extender = new WPI_TalonSRX(Constants.INTAKE.TAL_EXTENDER_ID);
         tal_Extender.configFactoryDefault();
         tal_Extender.setNeutralMode(NeutralMode.Brake);
-        tal_Extender.setInverted(false);
+        tal_Extender.setInverted(true);
         tal_Extender.configOpenloopRamp(Constants.DRIVE.RAMP_TIME);
-
+/*
         extenderEncoder = new Encoder(Constants.INTAKE.ENCODER_PORTS[0], Constants.INTAKE.ENCODER_PORTS[1]);
         extenderEncoder.setDistancePerPulse(Constants.INTAKE.ENCODER_DISTANCE_PER_PULSE); //units: radians
         extenderEncoder.reset();
@@ -43,7 +43,7 @@ public class Intake_s extends SubsystemBase {
         extenderPID = new ProfiledPIDController(Constants.INTAKE.EXTENDER_PID.P, Constants.INTAKE.EXTENDER_PID.I, Constants.INTAKE.EXTENDER_PID.D,
                         new TrapezoidProfile.Constraints(Constants.INTAKE.MAX_VELOCITY, Constants.INTAKE.MAX_ACCELERATION));
         extenderPID.reset(Constants.INTAKE.UP_POSITION);
-        extenderPID.setGoal(Constants.INTAKE.UP_POSITION);
+        extenderPID.setGoal(Constants.INTAKE.UP_POSITION);*/
     }
 
     public void stop() {
@@ -51,6 +51,14 @@ public class Intake_s extends SubsystemBase {
         tal_Extender.set(0);
     }
 
+    public void setSpeed(double speed) {
+        tal_Intake.set(speed);
+    }
+
+    public void setExtenderSpeed(double speed) {
+        tal_Extender.set(speed);
+    }
+/*
     public void forward() {
         tal_Intake.set(Constants.INTAKE.FORWARD_SPEED);
     }
@@ -78,8 +86,8 @@ public class Intake_s extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("intake extender position", extenderEncoder.getDistance());
-        tal_Extender.setVoltage(extenderPID.calculate(getExtenderPosition())
-                    + extenderFF.calculate(extenderPID.getSetpoint().position,
-                                           extenderPID.getSetpoint().velocity));
-    }
+//        tal_Extender.setVoltage(extenderPID.calculate(getExtenderPosition())
+//                    + extenderFF.calculate(extenderPID.getSetpoint().position,
+//                                           extenderPID.getSetpoint().velocity));
+    }*/
 }

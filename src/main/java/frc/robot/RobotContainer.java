@@ -23,6 +23,7 @@ import frc.robot.commands.Auto_TrajectoryTest;
 import frc.robot.commands.HighShootCommand;
 import frc.robot.commands.LowShootCommand;
 import frc.robot.commands.TeleopCommand;
+import frc.robot.subsystems.Climber_s;
 import frc.robot.subsystems.Drive_s;
 import frc.robot.subsystems.Indexer_s;
 import frc.robot.subsystems.Intake_s;
@@ -49,6 +50,7 @@ public class RobotContainer {
   private final Shooter_s shooter = new Shooter_s();
   private final Indexer_s indexer = new Indexer_s();
   private final Intake_s intake = new Intake_s();
+  private final Climber_s climber = new Climber_s();
 
   private UsbCamera camera;
 
@@ -60,6 +62,8 @@ public class RobotContainer {
 
   private Trigger indexerForwardTrigger;
   private Trigger indexerReverseTrigger;
+  private Trigger intakeTrigger;
+  private Trigger intakeExtenderTrigger;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -90,6 +94,7 @@ public class RobotContainer {
     shooter.setDefaultCommand(new RunCommand(shooter::stop, shooter));
     indexer.setDefaultCommand(new RunCommand(indexer::stop, indexer));
     intake.setDefaultCommand(new RunCommand(intake::stop, intake));
+    climber.setDefaultCommand(new RunCommand(climber::stop, climber));
     
     // Configure the button bindings
     configureButtonBindings();
@@ -102,11 +107,17 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    indexerForwardTrigger = new Trigger(() -> oi.indexerForwardSpeed.get() > Constants.INDEXER.DEADZONE);
+//    indexerForwardTrigger = new Trigger(() -> oi.indexerForwardSpeed.get() > Constants.INDEXER.DEADZONE);
     indexerReverseTrigger = new Trigger(() -> oi.indexerReverseSpeed.get() > Constants.INDEXER.DEADZONE);
+    intakeTrigger = new Trigger(() -> oi.intakeSpeed.get() > Constants.INDEXER.DEADZONE);
+    intakeExtenderTrigger = new Trigger(() -> Math.abs(oi.extenderSpeed.get()) > Constants.INDEXER.DEADZONE);
 
-    indexerForwardTrigger.whileActiveContinuous(() -> indexer.set(oi.indexerForwardSpeed.get()), indexer);
-    indexerReverseTrigger.and(indexerForwardTrigger.negate()).whileActiveContinuous(() -> indexer.set(-oi.indexerReverseSpeed.get()), indexer);
+//    indexerForwardTrigger.whileActiveContinuous(() -> indexer.set(oi.indexerForwardSpeed.get()), indexer);
+//    indexerReverseTrigger.and(indexerForwardTrigger.negate()).whileActiveContinuous(() -> indexer.set(-oi.indexerReverseSpeed.get()), indexer);
+    indexerReverseTrigger.whileActiveContinuous(() -> indexer.set(-oi.indexerReverseSpeed.get()), indexer);
+    intakeTrigger.whileActiveContinuous(() -> intake.setSpeed(oi.intakeSpeed.get() * 0.5), intake);
+    intakeExtenderTrigger.whileActiveContinuous(() -> intake.setExtenderSpeed(oi.extenderSpeed.get()), intake);
+//    intakeExtenderTrigger.whileActiveContinuous(() -> climber.set(oi.extenderSpeed.get()), climber);
 
     oi.highShooterButton.whileHeld(() -> shooter.setRPM(SmartDashboard.getNumber("high shooter rpm", Constants.SHOOTER.HIGH_RPM)), shooter);
     oi.lowShooterButton.whileHeld(() -> shooter.setRPM(SmartDashboard.getNumber("low shooter rpm", Constants.SHOOTER.LOW_RPM)), shooter);

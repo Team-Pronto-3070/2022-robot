@@ -38,12 +38,12 @@ public final class Constants {
         public static final int TAL_INDEXER_ID = 6;
         public static final int INDEXER_SWITCH_PORT = 9;
         public static final double RAMP_TIME = 0.2;
-        public static final double DEADZONE = 0.1;
+        public static final double DEADZONE = 0.2;
     }
 
     public static final class INTAKE {
-        public static final int TAL_INTAKE_ID = 7;
-        public static final int TAL_EXTENDER_ID = 8;
+        public static final int TAL_INTAKE_ID = 8;
+        public static final int TAL_EXTENDER_ID = 9;
 
         public static final double FORWARD_SPEED = 0.5;
         public static final double REVERSE_SPEED = 0.5;
@@ -68,6 +68,13 @@ public final class Constants {
             public static final double V = 0;
             public static final double A = 0;
         }
+    }
+
+    public static final class CLIMBER {
+        public static final int TAL_FRONT_ID = 10;
+        public static final int TAL_BACK_ID = 7;
+        
+        public static final double RAMP_TIME = 0.2;
     }
 
     public static final class DRIVE {
