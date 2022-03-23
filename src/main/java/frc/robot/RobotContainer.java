@@ -21,6 +21,8 @@ import frc.robot.commands.Auto_Trajectory0Ball;
 import frc.robot.commands.Auto_Trajectory1Ball;
 import frc.robot.commands.Auto_TrajectoryTest;
 import frc.robot.commands.HighShootCommand;
+import frc.robot.commands.Intake_DownCommand;
+import frc.robot.commands.Intake_UpCommand;
 import frc.robot.commands.LowShootCommand;
 import frc.robot.commands.TeleopCommand;
 import frc.robot.subsystems.Climber_s;
@@ -92,7 +94,7 @@ public class RobotContainer {
     drive.setDefaultCommand(new TeleopCommand(drive, oi));
     shooter.setDefaultCommand(new RunCommand(shooter::stop, shooter));
     indexer.setDefaultCommand(new RunCommand(indexer::stop, indexer));
-    intake.setDefaultCommand(new RunCommand(() -> intake.setSpeed(0), intake));
+    intake.setDefaultCommand(new RunCommand(intake::stop, intake));
     climber.setDefaultCommand(new RunCommand(climber::stop, climber));
     
     // Configure the button bindings
@@ -115,10 +117,13 @@ public class RobotContainer {
     intakeExtenderTrigger.whileActiveContinuous(() -> intake.setExtenderSpeed(oi.extenderSpeed.get()), intake);
 //    intakeExtenderTrigger.whileActiveContinuous(() -> climber.set(oi.extenderSpeed.get()), climber);
 
-    oi.smartIntakeButton.whileHeld(() -> {
-                  intake.forward();
-                  indexer.set(1);
-                }, intake, indexer);
+    oi.smartIntakeButton.whileHeld(
+                () -> {
+                  //intake.forward();
+                  //indexer.set(1);
+                }, intake, indexer)
+        .whenPressed(new Intake_DownCommand(intake))
+        .whenReleased(new Intake_UpCommand(intake));
 
     oi.smartIndexerButton.and(indexer.indexerSwitchTrigger.negate()).whileActiveContinuous(() -> indexer.set(1), indexer);
     oi.highSmartShooterButton.whenPressed(new HighShootCommand(drive, shooter, indexer).withInterrupt(oi.overrideButton::get));
@@ -126,8 +131,8 @@ public class RobotContainer {
     oi.indexerReverseButton.whileHeld(() -> indexer.set(-1), indexer);
 
     //TEMP
-    new Trigger(() -> oi.xbox.getPOV() == 0).whenActive(intake::up, intake);
-    new Trigger(() -> oi.xbox.getPOV() == 180).whenActive(intake::down, intake);
+    new Trigger(() -> oi.xbox.getPOV() == 0).whenActive(new Intake_UpCommand(intake));
+    new Trigger(() -> oi.xbox.getPOV() == 180).whenActive(new Intake_DownCommand(intake));
   }
 
   /**

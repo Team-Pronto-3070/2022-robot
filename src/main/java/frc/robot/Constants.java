@@ -51,8 +51,8 @@ public final class Constants {
         public static final int[] ENCODER_PORTS = new int[] {8, 7, 6, 5}; //a, b, index, absolute
         public static final double ENCODER_DISTANCE_PER_PULSE = 0.003067961576; //units: radians
                                                             //2 * pi / 2048 ppr * (18 / window motor gear)
-        public static final double MAX_VELOCITY = 1;
-        public static final double MAX_ACCELERATION = 1;
+        public static final double MAX_VELOCITY = 0.5;
+        public static final double MAX_ACCELERATION = 0.5;
         public static final double DOWN_POSITION = -0.754; //units: radians from horizontal
         public static final double UP_POSITION = 1.507; //vertical
         public static final double HORIZONTAL_POSITION_OFFSET = 0.042;
@@ -62,14 +62,14 @@ public final class Constants {
         //down = -.078 absolute position
         
         public static final class EXTENDER_PID {
-            public static final double P = 5;
+            public static final double P = 0.5;
             public static final double I = 0;
             public static final double D = 0;
         }
 
         public static final class EXTENDER_FEEDFORWARD {
             public static final double S = 0;
-            public static final double G = 0;
+            public static final double G = 7.5;
             public static final double V = 0;
             public static final double A = 0;
         }

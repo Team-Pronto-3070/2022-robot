@@ -17,10 +17,10 @@ public class Intake_s extends SubsystemBase {
     private WPI_TalonSRX tal_Extender;
 
     private DutyCycleEncoder extenderAbsoluteEncoder;
-
+/*
     private ArmFeedforward extenderFF;
     private ProfiledPIDController extenderPID;
-
+*/
     public Intake_s() {
 
         tal_Intake = new WPI_TalonSRX(Constants.INTAKE.TAL_INTAKE_ID);
@@ -38,12 +38,13 @@ public class Intake_s extends SubsystemBase {
         extenderAbsoluteEncoder = new DutyCycleEncoder(Constants.INTAKE.ENCODER_PORTS[3]);
         extenderAbsoluteEncoder.setDistancePerRotation(2 * Math.PI);
         extenderAbsoluteEncoder.setPositionOffset(Constants.INTAKE.HORIZONTAL_POSITION_OFFSET);
-
+/*
         extenderFF = new ArmFeedforward(Constants.INTAKE.EXTENDER_FEEDFORWARD.S, Constants.INTAKE.EXTENDER_FEEDFORWARD.G, Constants.INTAKE.EXTENDER_FEEDFORWARD.V, Constants.INTAKE.EXTENDER_FEEDFORWARD.A);
         extenderPID = new ProfiledPIDController(Constants.INTAKE.EXTENDER_PID.P, Constants.INTAKE.EXTENDER_PID.I, Constants.INTAKE.EXTENDER_PID.D,
                         new TrapezoidProfile.Constraints(Constants.INTAKE.MAX_VELOCITY, Constants.INTAKE.MAX_ACCELERATION));
         extenderPID.reset(getExtenderPosition());
         extenderPID.setGoal(Constants.INTAKE.UP_POSITION);
+        */
     }
 
     public void stop() {
@@ -67,6 +68,7 @@ public class Intake_s extends SubsystemBase {
         tal_Intake.set(-Constants.INTAKE.REVERSE_SPEED);
     }
 
+/*
     public void up() {
         extenderPID.setGoal(Constants.INTAKE.UP_POSITION);
     }
@@ -74,20 +76,22 @@ public class Intake_s extends SubsystemBase {
     public void down() {
         extenderPID.setGoal(Constants.INTAKE.DOWN_POSITION);
     }
+*/
 
-    private double getExtenderPosition() {
+    public double getExtenderPosition() {
         return extenderAbsoluteEncoder.getDistance();
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("intake extender absolute position", extenderAbsoluteEncoder.getDistance());
+        SmartDashboard.putNumber("intake extender absolute position", getExtenderPosition());
+        SmartDashboard.putNumber("extender motor percent", tal_Extender.get());
+        /*
         if (!extenderPID.atGoal()) {
             SmartDashboard.putBoolean("extender at goal", false);
             tal_Extender.set(extenderPID.calculate(getExtenderPosition()) / 12
-         //               + extenderFF.calculate(extenderPID.getSetpoint().position,
-         //                                   extenderPID.getSetpoint().velocity)
-                                            );
+                        + extenderFF.calculate(extenderPID.getSetpoint().position,
+                                            extenderPID.getSetpoint().velocity));
             SmartDashboard.putNumber("extender pid calculated voltage", extenderPID.calculate(getExtenderPosition()));
         } else {
             SmartDashboard.putBoolean("extender at goal", true);
@@ -97,5 +101,6 @@ public class Intake_s extends SubsystemBase {
         SmartDashboard.putNumber("extender motor percent", tal_Extender.get());
         SmartDashboard.putNumber("extender PID goal position", extenderPID.getGoal().position);
         SmartDashboard.putNumber("extender PID setpoint position", extenderPID.getSetpoint().position);
+        */
     }
 }
