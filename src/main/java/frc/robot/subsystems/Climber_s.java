@@ -18,8 +18,8 @@ public class Climber_s extends SubsystemBase{
         talBack.configFactoryDefault();
         talFront.setNeutralMode(NeutralMode.Brake);
         talBack.setNeutralMode(NeutralMode.Brake);
-        talFront.setInverted(false);
-        talBack.setInverted(false);
+        talFront.setInverted(true);
+        talBack.setInverted(true);
         talFront.configOpenloopRamp(Constants.CLIMBER.RAMP_TIME);
         talBack.configOpenloopRamp(Constants.CLIMBER.RAMP_TIME);
 

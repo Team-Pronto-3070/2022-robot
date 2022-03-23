@@ -45,19 +45,24 @@ public final class Constants {
         public static final int TAL_INTAKE_ID = 8;
         public static final int TAL_EXTENDER_ID = 9;
 
-        public static final double FORWARD_SPEED = 0.5;
-        public static final double REVERSE_SPEED = 0.5;
+        public static final double FORWARD_SPEED = 0.3;
+        public static final double REVERSE_SPEED = -0.5;
 
-        public static final int[] ENCODER_PORTS = new int[] {7, 8};
-        public static final double ENCODER_DISTANCE_PER_PULSE = 0; //units: radians
+        public static final int[] ENCODER_PORTS = new int[] {8, 7, 6, 5}; //a, b, index, absolute
+        public static final double ENCODER_DISTANCE_PER_PULSE = 0.003067961576; //units: radians
                                                             //2 * pi / 2048 ppr * (18 / window motor gear)
         public static final double MAX_VELOCITY = 1;
         public static final double MAX_ACCELERATION = 1;
-        public static final double DOWN_POSITION = 0; //units: radians from horizontal
-        public static final double UP_POSITION = -1 * Math.PI / 2; //vertical
+        public static final double DOWN_POSITION = -0.754; //units: radians from horizontal
+        public static final double UP_POSITION = 1.507; //vertical
+        public static final double HORIZONTAL_POSITION_OFFSET = 0.042;
+        //up - down = 2.256 radians
+        //up = .282 absolute position
+        //horizontal = .042 absolute position
+        //down = -.078 absolute position
         
         public static final class EXTENDER_PID {
-            public static final double P = 1;
+            public static final double P = 5;
             public static final double I = 0;
             public static final double D = 0;
         }
@@ -129,22 +134,13 @@ public final class Constants {
         public static final double JOY_STICK_OMEGA_DEADZONE = 0.25;
 
         public static final double VX_COEFFICIENT = 1;
-        public static final double OMEGA_COEFFICIENT = .5;
+        public static final double OMEGA_COEFFICIENT = 0.3;
 
-        public static final double SLOW_VX_COEFFICIENT = .25;
-        public static final double SLOW_OMEGA_COEFFICIENT = .2;
+        public static final double SLOW_VX_COEFFICIENT = 0.25;
+        public static final double SLOW_OMEGA_COEFFICIENT = 0.2;
     }
 
     public static final class OI {
-
-        public static final int JOY_PORT = 3;
         public static final int XBOX_PORT = 0;
-
-        public static final Controller CONTROLLER =  Controller.XBOX;
-
-        public static enum Controller {
-            XBOX, JOYSTICK 
-        }
-
     }
 }

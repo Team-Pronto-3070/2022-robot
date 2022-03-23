@@ -60,9 +60,8 @@ public class RobotContainer {
   //define a sendable chooser to select the autonomous command
   private SendableChooser<autoOptions> autoChooser = new SendableChooser<autoOptions>();
 
-  private Trigger indexerForwardTrigger;
-  private Trigger indexerReverseTrigger;
   private Trigger intakeTrigger;
+  private Trigger intakeReverseTrigger;
   private Trigger intakeExtenderTrigger;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -93,7 +92,7 @@ public class RobotContainer {
     drive.setDefaultCommand(new TeleopCommand(drive, oi));
     shooter.setDefaultCommand(new RunCommand(shooter::stop, shooter));
     indexer.setDefaultCommand(new RunCommand(indexer::stop, indexer));
-    intake.setDefaultCommand(new RunCommand(intake::stop, intake));
+    intake.setDefaultCommand(new RunCommand(() -> intake.setSpeed(0), intake));
     climber.setDefaultCommand(new RunCommand(climber::stop, climber));
     
     // Configure the button bindings
@@ -107,23 +106,28 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-//    indexerForwardTrigger = new Trigger(() -> oi.indexerForwardSpeed.get() > Constants.INDEXER.DEADZONE);
-    indexerReverseTrigger = new Trigger(() -> oi.indexerReverseSpeed.get() > Constants.INDEXER.DEADZONE);
     intakeTrigger = new Trigger(() -> oi.intakeSpeed.get() > Constants.INDEXER.DEADZONE);
+    intakeReverseTrigger = new Trigger(() -> oi.intakeReverseSpeed.get() > Constants.INDEXER.DEADZONE);
     intakeExtenderTrigger = new Trigger(() -> Math.abs(oi.extenderSpeed.get()) > Constants.INDEXER.DEADZONE);
 
-//    indexerForwardTrigger.whileActiveContinuous(() -> indexer.set(oi.indexerForwardSpeed.get()), indexer);
-//    indexerReverseTrigger.and(indexerForwardTrigger.negate()).whileActiveContinuous(() -> indexer.set(-oi.indexerReverseSpeed.get()), indexer);
-    indexerReverseTrigger.whileActiveContinuous(() -> indexer.set(-oi.indexerReverseSpeed.get()), indexer);
     intakeTrigger.whileActiveContinuous(() -> intake.setSpeed(oi.intakeSpeed.get() * 0.5), intake);
+    intakeReverseTrigger.whileActiveContinuous(() -> intake.setSpeed(-oi.intakeReverseSpeed.get() * 0.5), intake);
     intakeExtenderTrigger.whileActiveContinuous(() -> intake.setExtenderSpeed(oi.extenderSpeed.get()), intake);
 //    intakeExtenderTrigger.whileActiveContinuous(() -> climber.set(oi.extenderSpeed.get()), climber);
 
-    oi.highShooterButton.whileHeld(() -> shooter.setRPM(SmartDashboard.getNumber("high shooter rpm", Constants.SHOOTER.HIGH_RPM)), shooter);
-    oi.lowShooterButton.whileHeld(() -> shooter.setRPM(SmartDashboard.getNumber("low shooter rpm", Constants.SHOOTER.LOW_RPM)), shooter);
+    oi.smartIntakeButton.whileHeld(() -> {
+                  intake.forward();
+                  indexer.set(1);
+                }, intake, indexer);
+
     oi.smartIndexerButton.and(indexer.indexerSwitchTrigger.negate()).whileActiveContinuous(() -> indexer.set(1), indexer);
-    oi.highSmartShooterButton.whenPressed(new HighShootCommand(drive, shooter, indexer).withInterrupt(oi.shooterOverrideButton::get));
-    oi.lowSmartShooterButton.whenPressed(new LowShootCommand(drive, shooter, indexer).withInterrupt(oi.shooterOverrideButton::get));
+    oi.highSmartShooterButton.whenPressed(new HighShootCommand(drive, shooter, indexer).withInterrupt(oi.overrideButton::get));
+    oi.lowSmartShooterButton.whenPressed(new LowShootCommand(drive, shooter, indexer).withInterrupt(oi.overrideButton::get));
+    oi.indexerReverseButton.whileHeld(() -> indexer.set(-1), indexer);
+
+    //TEMP
+    new Trigger(() -> oi.xbox.getPOV() == 0).whenActive(intake::up, intake);
+    new Trigger(() -> oi.xbox.getPOV() == 180).whenActive(intake::down, intake);
   }
 
   /**
