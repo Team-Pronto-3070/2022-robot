@@ -29,8 +29,8 @@ public class TeleopCommand extends CommandBase {
         ///_drive.arcadeDrive(
         _drive.curvatureDrive(
             (Math.abs(_oi.teleopX.get()) < Constants.TELEOP_COMMAND.JOY_STICK_DEADZONE) ?
-                    0 : _oi.teleopX.get() * (_oi.slowButton.get() ? Constants.TELEOP_COMMAND.SLOW_VX_COEFFICIENT : Constants.TELEOP_COMMAND.VX_COEFFICIENT), 
+                    0 : _oi.teleopX.get() * (_oi.slowButton.get() || _oi.smartIntakeButton.get() ? Constants.TELEOP_COMMAND.SLOW_VX_COEFFICIENT : Constants.TELEOP_COMMAND.VX_COEFFICIENT), 
             (Math.abs(_oi.teleopTheta.get()) < Constants.TELEOP_COMMAND.JOY_STICK_OMEGA_DEADZONE) ?
-                    0 : _oi.teleopTheta.get() * (_oi.slowButton.get() ? Constants.TELEOP_COMMAND.SLOW_OMEGA_COEFFICIENT : Constants.TELEOP_COMMAND.OMEGA_COEFFICIENT));
+                    0 : _oi.teleopTheta.get() * (_oi.slowButton.get() || _oi.smartIntakeButton.get() ? Constants.TELEOP_COMMAND.SLOW_OMEGA_COEFFICIENT : Constants.TELEOP_COMMAND.OMEGA_COEFFICIENT));
   }
 }

@@ -53,7 +53,7 @@ public final class Constants {
                                                             //2 * pi / 2048 ppr * (18 / window motor gear)
         public static final double MAX_VELOCITY = 0.5;
         public static final double MAX_ACCELERATION = 0.5;
-        public static final double DOWN_POSITION = -0.754; //units: radians from horizontal
+        public static final double DOWN_POSITION = -0.896; //units: radians from horizontal
         public static final double UP_POSITION = 1.507; //vertical
         public static final double HORIZONTAL_POSITION_OFFSET = 0.042;
         //up - down = 2.256 radians

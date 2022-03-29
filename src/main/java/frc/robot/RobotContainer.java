@@ -28,6 +28,7 @@ import frc.robot.commands.TeleopCommand;
 import frc.robot.subsystems.Climber_s;
 import frc.robot.subsystems.Drive_s;
 import frc.robot.subsystems.Indexer_s;
+import frc.robot.subsystems.IntakeExtender_s;
 import frc.robot.subsystems.Intake_s;
 import frc.robot.subsystems.Shooter_s;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -53,6 +54,7 @@ public class RobotContainer {
   private final Indexer_s indexer = new Indexer_s();
   private final Intake_s intake = new Intake_s();
   private final Climber_s climber = new Climber_s();
+  private final IntakeExtender_s intakeExtender = new IntakeExtender_s();
 
   private UsbCamera camera;
 
@@ -96,6 +98,7 @@ public class RobotContainer {
     indexer.setDefaultCommand(new RunCommand(indexer::stop, indexer));
     intake.setDefaultCommand(new RunCommand(intake::stop, intake));
     climber.setDefaultCommand(new RunCommand(climber::stop, climber));
+    intakeExtender.setDefaultCommand(new RunCommand(intakeExtender::stop, intakeExtender));
     
     // Configure the button bindings
     configureButtonBindings();
@@ -114,16 +117,16 @@ public class RobotContainer {
 
     intakeTrigger.whileActiveContinuous(() -> intake.setSpeed(oi.intakeSpeed.get() * 0.5), intake);
     intakeReverseTrigger.whileActiveContinuous(() -> intake.setSpeed(-oi.intakeReverseSpeed.get() * 0.5), intake);
-    intakeExtenderTrigger.whileActiveContinuous(() -> intake.setExtenderSpeed(oi.extenderSpeed.get()), intake);
+    intakeExtenderTrigger.whileActiveContinuous(() -> intakeExtender.setExtenderSpeed(oi.extenderSpeed.get()), intakeExtender);
 //    intakeExtenderTrigger.whileActiveContinuous(() -> climber.set(oi.extenderSpeed.get()), climber);
 
     oi.smartIntakeButton.whileHeld(
                 () -> {
-                  //intake.forward();
-                  //indexer.set(1);
+                  intake.forward();
+                  indexer.set(1);
                 }, intake, indexer)
-        .whenPressed(new Intake_DownCommand(intake))
-        .whenReleased(new Intake_UpCommand(intake));
+        .whenPressed(new Intake_DownCommand(intakeExtender).withInterrupt(oi.overrideButton::get))
+        .whenReleased(new Intake_UpCommand(intakeExtender).withInterrupt(oi.overrideButton::get));
 
     oi.smartIndexerButton.and(indexer.indexerSwitchTrigger.negate()).whileActiveContinuous(() -> indexer.set(1), indexer);
     oi.highSmartShooterButton.whenPressed(new HighShootCommand(drive, shooter, indexer).withInterrupt(oi.overrideButton::get));
@@ -131,8 +134,8 @@ public class RobotContainer {
     oi.indexerReverseButton.whileHeld(() -> indexer.set(-1), indexer);
 
     //TEMP
-    new Trigger(() -> oi.xbox.getPOV() == 0).whenActive(new Intake_UpCommand(intake));
-    new Trigger(() -> oi.xbox.getPOV() == 180).whenActive(new Intake_DownCommand(intake));
+    new Trigger(() -> oi.xbox.getPOV() == 0).whenActive(new Intake_UpCommand(intakeExtender).withInterrupt(oi.overrideButton::get));
+    new Trigger(() -> oi.xbox.getPOV() == 180).whenActive(new Intake_DownCommand(intakeExtender).withInterrupt(oi.overrideButton::get));
   }
 
   /**

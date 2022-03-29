@@ -6,20 +6,24 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
-import frc.robot.subsystems.Intake_s;
+import frc.robot.subsystems.IntakeExtender_s;
 
 public class Intake_UpCommand extends SequentialCommandGroup {
-    public Intake_UpCommand(Intake_s intake) {
+    public Intake_UpCommand(IntakeExtender_s intakeExtender) {
         addCommands(
             new ParallelRaceGroup(
-                new RunCommand(() -> intake.setExtenderSpeed(1), intake),
-                new WaitUntilCommand(() -> intake.getExtenderPosition() >= 1)
+                new RunCommand(() -> intakeExtender.setExtenderSpeed(1), intakeExtender),
+                new WaitUntilCommand(() -> intakeExtender.getExtenderPosition() >= -0.25)
             ),
             new ParallelRaceGroup(
-                new RunCommand(() -> intake.setExtenderSpeed(0.25), intake),
-                new WaitUntilCommand(() -> intake.getExtenderPosition() >= Constants.INTAKE.UP_POSITION)
+                new RunCommand(() -> intakeExtender.setExtenderSpeed(0.5), intakeExtender),
+                new WaitUntilCommand(() -> intakeExtender.getExtenderPosition() >= 0.8)
             ),
-            new InstantCommand(() -> intake.setExtenderSpeed(0), intake)
+            new ParallelRaceGroup(
+                new RunCommand(() -> intakeExtender.setExtenderSpeed(0.25), intakeExtender),
+                new WaitUntilCommand(() -> intakeExtender.getExtenderPosition() >= Constants.INTAKE.UP_POSITION)
+            ),
+            new InstantCommand(() -> intakeExtender.setExtenderSpeed(0), intakeExtender)
         );
     }
 }
