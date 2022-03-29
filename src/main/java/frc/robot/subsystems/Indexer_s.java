@@ -23,8 +23,10 @@ public class Indexer_s extends SubsystemBase {
 
   private WPI_TalonSRX tal_Indexer;
 
-  private DigitalInput indexerSwitch;
-  public Trigger indexerSwitchTrigger;
+  private DigitalInput indexerHighSwitch;
+  private DigitalInput indexerMiddleSwitch;
+  public Trigger indexerHighSwitchTrigger;
+  public Trigger indexerMiddleSwitchTrigger;
 
   public Indexer_s() {
 
@@ -34,8 +36,11 @@ public class Indexer_s extends SubsystemBase {
     tal_Indexer.setInverted(true);
     tal_Indexer.configOpenloopRamp(Constants.INDEXER.RAMP_TIME);
 
-    indexerSwitch = new DigitalInput(Constants.INDEXER.INDEXER_SWITCH_PORT);
-    indexerSwitchTrigger = new Trigger(indexerSwitch::get);
+    indexerHighSwitch = new DigitalInput(Constants.INDEXER.INDEXER_SWITCH_PORT);
+    indexerHighSwitchTrigger = new Trigger(indexerHighSwitch::get);
+
+    indexerMiddleSwitch = new DigitalInput(Constants.INDEXER.INDEXER_MIDDLE_SWITCH_PORT);
+    indexerMiddleSwitchTrigger = new Trigger(indexerMiddleSwitch::get);
   }
   
   public void set(double speed) {
@@ -48,7 +53,8 @@ public class Indexer_s extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("indexer switch", indexerSwitch.get());
+    SmartDashboard.putBoolean("indexer high switch", indexerHighSwitch.get());
+    SmartDashboard.putBoolean("indexer middle switch", indexerMiddleSwitch.get());
   }
 }
 

@@ -79,6 +79,14 @@ public class Shooter_s extends SubsystemBase {
     return Math.abs(getRPM() - setpoint) < Constants.SHOOTER.RPM_TOLERANCE;
   }
 
+  public void enableReverse() {
+    tal_Shooter.configPeakOutputReverse(-1);
+  }
+
+  public void disableReverse() {
+    tal_Shooter.configPeakOutputReverse(0);
+  }
+
   @Override
   public void periodic() {
     SmartDashboard.putNumber("current shooter rpm", getRPM());

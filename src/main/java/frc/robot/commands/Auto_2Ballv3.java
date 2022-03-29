@@ -38,7 +38,7 @@ public class Auto_2Ballv3 extends SequentialCommandGroup {
             new ParallelRaceGroup(
                 new ProntoRamseteCommand(outOfTarmac, drive),
                 new RunCommand(() -> indexer.set(1), indexer),
-                new WaitUntilCommand(indexer.indexerSwitchTrigger::get)
+                new WaitUntilCommand(indexer.indexerMiddleSwitchTrigger::get)
             ),
             new InstantCommand(indexer::stop, indexer),
             new ProntoRamseteCommand(setUpForShot, drive),

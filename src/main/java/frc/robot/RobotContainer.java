@@ -66,7 +66,7 @@ public class RobotContainer {
 
   private Trigger intakeTrigger;
   private Trigger intakeReverseTrigger;
-  private Trigger intakeExtenderTrigger;
+  private Trigger rightStickTrigger;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -111,31 +111,45 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    intakeTrigger = new Trigger(() -> oi.intakeSpeed.get() > Constants.INDEXER.DEADZONE);
+    //intakeTrigger = new Trigger(() -> oi.intakeSpeed.get() > Constants.INDEXER.DEADZONE);
     intakeReverseTrigger = new Trigger(() -> oi.intakeReverseSpeed.get() > Constants.INDEXER.DEADZONE);
-    intakeExtenderTrigger = new Trigger(() -> Math.abs(oi.extenderSpeed.get()) > Constants.INDEXER.DEADZONE);
+    rightStickTrigger = new Trigger(() -> Math.abs(oi.rightStick.get()) > Constants.INDEXER.DEADZONE);
 
-    intakeTrigger.whileActiveContinuous(() -> intake.setSpeed(oi.intakeSpeed.get() * 0.5), intake);
+    //intakeTrigger.whileActiveContinuous(() -> intake.setSpeed(oi.intakeSpeed.get() * 0.5), intake);
     intakeReverseTrigger.whileActiveContinuous(() -> intake.setSpeed(-oi.intakeReverseSpeed.get() * 0.5), intake);
-    intakeExtenderTrigger.whileActiveContinuous(() -> intakeExtender.setExtenderSpeed(oi.extenderSpeed.get()), intakeExtender);
-//    intakeExtenderTrigger.whileActiveContinuous(() -> climber.set(oi.extenderSpeed.get()), climber);
+    
+    oi.intakeExtenderManualButton.and(rightStickTrigger)
+          .whileActiveContinuous(() -> intakeExtender.setExtenderSpeed(oi.rightStick.get()), intakeExtender);
+    oi.climberManualButton.and(rightStickTrigger)
+          .whileActiveContinuous(() -> climber.set(oi.rightStick.get()), climber);
 
-    oi.smartIntakeButton.whileHeld(
+    oi.smartIntakeButton1.whileActiveContinuous(
                 () -> {
                   intake.forward();
-                  indexer.set(1);
+                  indexer.set(indexer.indexerMiddleSwitchTrigger.get() ? 0 : 1);
                 }, intake, indexer)
-        .whenPressed(new Intake_DownCommand(intakeExtender).withInterrupt(oi.overrideButton::get))
-        .whenReleased(new Intake_UpCommand(intakeExtender).withInterrupt(oi.overrideButton::get));
+        .whenActive(new Intake_DownCommand(intakeExtender).withInterrupt(oi.overrideButton::get))
+        .whenInactive(new Intake_UpCommand(intakeExtender).withInterrupt(oi.overrideButton::get));
 
-    oi.smartIndexerButton.and(indexer.indexerSwitchTrigger.negate()).whileActiveContinuous(() -> indexer.set(1), indexer);
+    oi.smartIntakeButton2.whileActiveContinuous(
+                () -> {
+                  intake.forward();
+                  indexer.set(indexer.indexerMiddleSwitchTrigger.get() && indexer.indexerHighSwitchTrigger.get() ? 0 : 1);
+                  shooter.set(indexer.indexerHighSwitchTrigger.get() ? 0 : 0.1);
+                }, intake, indexer, shooter)
+        .whenActive(new Intake_DownCommand(intakeExtender).withInterrupt(oi.overrideButton::get))
+        .whenInactive(new Intake_UpCommand(intakeExtender).withInterrupt(oi.overrideButton::get));
+
+    oi.smartIndexerButton.whileHeld(() -> {
+                  indexer.set(1);
+                  intake.forward();
+              }, indexer);
     oi.highSmartShooterButton.whenPressed(new HighShootCommand(drive, shooter, indexer).withInterrupt(oi.overrideButton::get));
     oi.lowSmartShooterButton.whenPressed(new LowShootCommand(drive, shooter, indexer).withInterrupt(oi.overrideButton::get));
     oi.indexerReverseButton.whileHeld(() -> indexer.set(-1), indexer);
 
-    //TEMP
-    new Trigger(() -> oi.xbox.getPOV() == 0).whenActive(new Intake_UpCommand(intakeExtender).withInterrupt(oi.overrideButton::get));
-    new Trigger(() -> oi.xbox.getPOV() == 180).whenActive(new Intake_DownCommand(intakeExtender).withInterrupt(oi.overrideButton::get));
+    oi.intakeUpButton.whenActive(new Intake_UpCommand(intakeExtender).withInterrupt(oi.overrideButton::get));
+    oi.intakeDownButton.whenActive(new Intake_DownCommand(intakeExtender).withInterrupt(oi.overrideButton::get));
   }
 
   /**
