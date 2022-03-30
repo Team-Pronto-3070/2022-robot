@@ -20,6 +20,7 @@ import frc.robot.commands.Auto_Simple1Ball;
 import frc.robot.commands.Auto_Trajectory0Ball;
 import frc.robot.commands.Auto_Trajectory1Ball;
 import frc.robot.commands.Auto_TrajectoryTest;
+import frc.robot.commands.ClearShooterCommand;
 import frc.robot.commands.HighShootCommand;
 import frc.robot.commands.Intake_DownCommand;
 import frc.robot.commands.Intake_UpCommand;
@@ -126,16 +127,17 @@ public class RobotContainer {
     oi.smartIntakeButton1.whileActiveContinuous(
                 () -> {
                   intake.forward();
-                  indexer.set(indexer.indexerMiddleSwitchTrigger.get() ? 0 : 1);
+                  indexer.set(indexer.indexerMiddleSwitch.get() ? 0 : 1);
                 }, intake, indexer)
         .whenActive(new Intake_DownCommand(intakeExtender).withInterrupt(oi.overrideButton::get))
-        .whenInactive(new Intake_UpCommand(intakeExtender).withInterrupt(oi.overrideButton::get));
+        .whenInactive(new Intake_UpCommand(intakeExtender).withInterrupt(() -> oi.overrideButton.get() || oi.smartIntakeButton2.get()));
 
-    oi.smartIntakeButton2.whileActiveContinuous(
+    oi.smartIntakeButton2
+          .whileActiveContinuous(
                 () -> {
                   intake.forward();
-                  indexer.set(indexer.indexerMiddleSwitchTrigger.get() && indexer.indexerHighSwitchTrigger.get() ? 0 : 1);
-                  shooter.set(indexer.indexerHighSwitchTrigger.get() ? 0 : 0.1);
+                  indexer.set(indexer.indexerMiddleSwitch.get() && indexer.getHighSwitchLatch() ? 0 : 1);
+                  shooter.set(indexer.getHighSwitchLatch() ? 0 : 0.15);
                 }, intake, indexer, shooter)
         .whenActive(new Intake_DownCommand(intakeExtender).withInterrupt(oi.overrideButton::get))
         .whenInactive(new Intake_UpCommand(intakeExtender).withInterrupt(oi.overrideButton::get));
@@ -144,12 +146,18 @@ public class RobotContainer {
                   indexer.set(1);
                   intake.forward();
               }, indexer);
-    oi.highSmartShooterButton.whenPressed(new HighShootCommand(drive, shooter, indexer).withInterrupt(oi.overrideButton::get));
-    oi.lowSmartShooterButton.whenPressed(new LowShootCommand(drive, shooter, indexer).withInterrupt(oi.overrideButton::get));
+    oi.highSmartShooterButton.whenPressed(new HighShootCommand(drive, shooter, indexer)
+                      .beforeStarting(new ClearShooterCommand(indexer, shooter))
+                      .withInterrupt(oi.overrideButton::get));
+    oi.lowSmartShooterButton.whenPressed(new LowShootCommand(drive, shooter, indexer)
+                      .beforeStarting(new ClearShooterCommand(indexer, shooter))
+                      .withInterrupt(oi.overrideButton::get));
     oi.indexerReverseButton.whileHeld(() -> indexer.set(-1), indexer);
 
     oi.intakeUpButton.whenActive(new Intake_UpCommand(intakeExtender).withInterrupt(oi.overrideButton::get));
     oi.intakeDownButton.whenActive(new Intake_DownCommand(intakeExtender).withInterrupt(oi.overrideButton::get));
+    
+    oi.clearShooterButton.whenActive(new ClearShooterCommand(indexer, shooter).withInterrupt(oi.overrideButton::get));
   }
 
   /**

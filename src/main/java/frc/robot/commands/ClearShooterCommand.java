@@ -21,9 +21,9 @@ public class ClearShooterCommand extends SequentialCommandGroup{
                         new RunCommand(() -> indexer.set(-1), indexer),
                         new RunCommand(() -> shooter.set(-0.1), shooter),
                         new SequentialCommandGroup(
-                            new WaitUntilCommand(indexer.indexerMiddleSwitchTrigger.negate()::get),
+                            new WaitUntilCommand(() -> !indexer.indexerMiddleSwitch.get()),
                             new WaitCommand(0.1),
-                            new WaitUntilCommand(indexer.indexerMiddleSwitchTrigger::get)
+                            new WaitUntilCommand(indexer.indexerMiddleSwitch::get)
                         )
                     ),
                     new InstantCommand(shooter::stop, shooter),
@@ -31,8 +31,9 @@ public class ClearShooterCommand extends SequentialCommandGroup{
                     new InstantCommand(shooter::disableReverse, shooter)
                 ),
                 new WaitCommand(0),
-                indexer.indexerHighSwitchTrigger::get
-            )
+                indexer::getHighSwitchLatch
+            ),
+            new InstantCommand(indexer::resetHighSwitchLatch, indexer)
         );
     }
 

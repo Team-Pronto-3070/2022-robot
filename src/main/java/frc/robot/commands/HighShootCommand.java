@@ -26,7 +26,8 @@ public class HighShootCommand extends SequentialCommandGroup{
                 )
             ),
             new InstantCommand(() -> indexer.stop(), indexer),
-            new InstantCommand(() -> shooter.stop(), shooter)
+            new InstantCommand(() -> shooter.stop(), shooter),
+            new InstantCommand(indexer::resetHighSwitchLatch, indexer)
         );
     }
 }

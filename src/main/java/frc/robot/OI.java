@@ -35,6 +35,7 @@ public class OI {
     public final Trigger intakeExtenderManualButton;
     public final Trigger intakeUpButton;
     public final Trigger intakeDownButton;
+    public final Trigger clearShooterButton;
 
     /**
      * Constructs the Operator Interface.
@@ -61,5 +62,6 @@ public class OI {
         intakeExtenderManualButton = new Trigger(() -> xbox.getPOV() == 270);
         intakeUpButton = new Trigger(() -> xbox.getPOV() == 0);
         intakeDownButton = new Trigger(() -> xbox.getPOV() == 180);
+        clearShooterButton = new Trigger(() -> xbox.getPOV() == 90);
     }
 }

@@ -22,9 +22,9 @@ public final class Constants {
         public static final double RPM_TOLERANCE = 250;
 
         public static final class FEEDFORWARD {
-            public static final double S = 0.9 * 0.77912;
-            public static final double V = 0.9 * 0.11497;
-            public static final double A = 0.9 * 0.015929;
+            public static final double S = 0.77912;
+            public static final double V = 0.11497;
+            public static final double A = 0.015929;
         }
 
         public static final class PID {
