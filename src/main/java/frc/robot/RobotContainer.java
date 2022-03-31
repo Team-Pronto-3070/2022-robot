@@ -139,7 +139,7 @@ public class RobotContainer {
                 () -> {
                   intake.forward();
                   indexer.set(indexer.indexerMiddleSwitch.get() && indexer.getHighSwitchLatch() ? 0 : 1);
-                  shooter.set(indexer.getHighSwitchLatch() ? 0 : 0.15);
+                  shooter.set(indexer.getHighSwitchLatch() ? 0 : (shooter.getRPM < 10 ? 0.25 : 0.15);
                 }, intake, indexer, shooter)
         .whenActive(new Intake_DownCommand(intakeExtender).withInterrupt(oi.overrideButton::get))
         .whenInactive(new Intake_UpCommand(intakeExtender).withInterrupt(oi.overrideButton::get));
