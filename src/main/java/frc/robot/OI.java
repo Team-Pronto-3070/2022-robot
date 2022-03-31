@@ -37,6 +37,8 @@ public class OI {
     public final Trigger intakeDownButton;
     public final Trigger clearShooterButton;
 
+    public final Supplier<Boolean> slow;
+
     /**
      * Constructs the Operator Interface.
      */
@@ -63,5 +65,7 @@ public class OI {
         intakeUpButton = new Trigger(() -> xbox.getPOV() == 0);
         intakeDownButton = new Trigger(() -> xbox.getPOV() == 180);
         clearShooterButton = new Trigger(() -> xbox.getPOV() == 90);
+
+        slow = () -> slowButton.get() || smartIntakeButton1.get() || smartIntakeButton2.get();
     }
 }

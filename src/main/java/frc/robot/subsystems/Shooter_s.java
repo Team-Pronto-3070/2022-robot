@@ -38,10 +38,11 @@ public class Shooter_s extends SubsystemBase {
     tal_Shooter = new WPI_TalonFX(Constants.SHOOTER.TAL_SHOOTER_ID);
     tal_Shooter.configFactoryDefault();
     tal_Shooter.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-    tal_Shooter.setNeutralMode(NeutralMode.Coast);
+    //tal_Shooter.setNeutralMode(NeutralMode.Coast);
+    tal_Shooter.setNeutralMode(NeutralMode.Brake);
     tal_Shooter.setInverted(true);
     tal_Shooter.configOpenloopRamp(Constants.SHOOTER.RAMP_TIME);
-    tal_Shooter.configPeakOutputReverse(0);
+    //tal_Shooter.configPeakOutputReverse(0);
     tal_Shooter.config_kP(0, Constants.SHOOTER.PID.P);
     tal_Shooter.config_kI(0, Constants.SHOOTER.PID.I);
     tal_Shooter.config_kD(0, Constants.SHOOTER.PID.D);

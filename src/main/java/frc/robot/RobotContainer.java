@@ -40,6 +40,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.math.MathUtil;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -122,7 +123,8 @@ public class RobotContainer {
     oi.intakeExtenderManualButton.and(rightStickTrigger)
           .whileActiveContinuous(() -> intakeExtender.setExtenderSpeed(oi.rightStick.get()), intakeExtender);
     oi.climberManualButton.and(rightStickTrigger)
-          .whileActiveContinuous(() -> climber.set(oi.rightStick.get()), climber);
+          .whileActiveContinuous(() -> climber.set(MathUtil.clamp(oi.rightStick.get(), 
+                                                      climber.limitSwitch.get() ? 0 : -1, 1)), climber);
 
     oi.smartIntakeButton1.whileActiveContinuous(
                 () -> {
@@ -158,6 +160,8 @@ public class RobotContainer {
     oi.intakeDownButton.whenActive(new Intake_DownCommand(intakeExtender).withInterrupt(oi.overrideButton::get));
     
     oi.clearShooterButton.whenActive(new ClearShooterCommand(indexer, shooter).withInterrupt(oi.overrideButton::get));
+
+    oi.overrideButton.whenActive(new InstantCommand(shooter::enableReverse, shooter));
   }
 
   /**

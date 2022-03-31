@@ -79,6 +79,7 @@ public final class Constants {
     public static final class CLIMBER {
         public static final int TAL_FRONT_ID = 10;
         public static final int TAL_BACK_ID = 7;
+        public static final int LIMIT_SWITCH_PORT = 3;
         
         public static final double RAMP_TIME = 0.2;
     }

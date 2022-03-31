@@ -15,11 +15,12 @@ import frc.robot.subsystems.Shooter_s;
 public class LowShootCommand extends SequentialCommandGroup{
     public LowShootCommand(Drive_s drive, Shooter_s shooter, Indexer_s indexer){
         addCommands(
+            new InstantCommand(shooter::disableReverse, shooter),
             new ParallelRaceGroup(
                 new RunCommand(() -> shooter.setRPM(SmartDashboard.getNumber("low shooter rpm", Constants.SHOOTER.LOW_RPM)), shooter),
                 new SequentialCommandGroup(
                     new WaitUntilCommand(shooter::atSetpoint),
-                    new WaitCommand(2),
+                    new WaitCommand(0.1),
                     new InstantCommand(() -> indexer.set(1), indexer),
                     new WaitCommand(2),
                     new InstantCommand(() -> indexer.stop(), indexer)
@@ -27,7 +28,8 @@ public class LowShootCommand extends SequentialCommandGroup{
             ),
             new InstantCommand(() -> indexer.stop(), indexer),
             new InstantCommand(() -> shooter.stop(), shooter),
-            new InstantCommand(indexer::resetHighSwitchLatch, indexer)
+            new InstantCommand(indexer::resetHighSwitchLatch, indexer),
+            new InstantCommand(shooter::enableReverse, shooter)
         );
     }
 }

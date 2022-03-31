@@ -16,10 +16,11 @@ public class ClearShooterCommand extends SequentialCommandGroup{
         addCommands(
             new ConditionalCommand(
                 new SequentialCommandGroup(
+                    new InstantCommand(indexer::resetHighSwitchLatch, indexer),
                     new InstantCommand(shooter::enableReverse, shooter),
                     new ParallelRaceGroup(
                         new RunCommand(() -> indexer.set(-1), indexer),
-                        new RunCommand(() -> shooter.set(-0.1), shooter),
+                        new RunCommand(() -> shooter.set(-0.2), shooter),
                         new SequentialCommandGroup(
                             new WaitUntilCommand(() -> !indexer.indexerMiddleSwitch.get()),
                             new WaitCommand(0.1),
