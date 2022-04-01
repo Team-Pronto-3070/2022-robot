@@ -4,15 +4,15 @@
 
 package frc.robot.subsystems;
 
-//import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-//import edu.wpi.first.math.MathUtil;
-//import edu.wpi.first.math.controller.BangBangController;
-//import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.BangBangController;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-//import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -27,9 +27,9 @@ import frc.robot.Constants;
 public class Shooter_s extends SubsystemBase {
 
   private WPI_TalonFX tal_Shooter;
-//  private BangBangController shooter_bb;
-//  private PIDController shooter_PID;
-//  private SimpleMotorFeedforward shooter_ff;
+  private BangBangController shooter_bb;
+  private PIDController shooter_PID;
+  private SimpleMotorFeedforward shooter_ff;
 
   private double setpoint = 0;
 
@@ -38,18 +38,19 @@ public class Shooter_s extends SubsystemBase {
     tal_Shooter = new WPI_TalonFX(Constants.SHOOTER.TAL_SHOOTER_ID);
     tal_Shooter.configFactoryDefault();
     tal_Shooter.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-    tal_Shooter.setNeutralMode(NeutralMode.Coast);
+    //tal_Shooter.setNeutralMode(NeutralMode.Coast);
+    tal_Shooter.setNeutralMode(NeutralMode.Brake);
     tal_Shooter.setInverted(true);
     tal_Shooter.configOpenloopRamp(Constants.SHOOTER.RAMP_TIME);
-    tal_Shooter.configPeakOutputReverse(0);
+    //tal_Shooter.configPeakOutputReverse(0);
     tal_Shooter.config_kP(0, Constants.SHOOTER.PID.P);
     tal_Shooter.config_kI(0, Constants.SHOOTER.PID.I);
     tal_Shooter.config_kD(0, Constants.SHOOTER.PID.D);
-//    tal_Shooter.config_kF(0, Constants.SHOOTER.FEEDFORWARD.V);
+//    tal_Shooter.config_kF(0, Constants.SHOOTER.FEEDFORWARD.V * 0.9);
     
 //    shooter_bb = new BangBangController();
 //    shooter_PID = new PIDController(Constants.SHOOTER.PID.P, Constants.SHOOTER.PID.I, Constants.SHOOTER.PID.D);
-//    shooter_ff = new SimpleMotorFeedforward(Constants.SHOOTER.FEEDFORWARD.S, Constants.SHOOTER.FEEDFORWARD.V, Constants.SHOOTER.FEEDFORWARD.A);
+    shooter_ff = new SimpleMotorFeedforward(Constants.SHOOTER.FEEDFORWARD.S, Constants.SHOOTER.FEEDFORWARD.V, Constants.SHOOTER.FEEDFORWARD.A);
   }
 
   public void set(double speed) {
@@ -66,8 +67,10 @@ public class Shooter_s extends SubsystemBase {
 //    set(shooter_bb.calculate(getRPM(), rpm));
 //    set(MathUtil.clamp(shooter_PID.calculate(getRPM(), rpm), 0, 1));
 //    tal_Shooter.set(ControlMode.Velocity, rpm * 2048 / 600,
-//                    DemandType.ArbitraryFeedForward, Constants.SHOOTER.FEEDFORWARD.S / 12);
+//                    DemandType.ArbitraryFeedForward, Constants.SHOOTER.FEEDFORWARD.S * 0.9 / 12);
+    
     tal_Shooter.set(ControlMode.Velocity, rpm * 2048.0 / 600.0);
+    //tal_Shooter.setVoltage(shooter_ff.calculate(rpm));
   }
 
   public void stop() {
@@ -77,6 +80,16 @@ public class Shooter_s extends SubsystemBase {
 
   public Boolean atSetpoint() {
     return Math.abs(getRPM() - setpoint) < Constants.SHOOTER.RPM_TOLERANCE;
+  }
+
+  public void enableReverse() {
+    tal_Shooter.configPeakOutputReverse(-1);
+    tal_Shooter.setNeutralMode(NeutralMode.Brake);
+  }
+
+  public void disableReverse() {
+    tal_Shooter.configPeakOutputReverse(0);
+    tal_Shooter.setNeutralMode(NeutralMode.Coast);
   }
 
   @Override

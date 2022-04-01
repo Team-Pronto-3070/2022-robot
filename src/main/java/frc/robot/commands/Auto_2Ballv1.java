@@ -33,7 +33,7 @@ public class Auto_2Ballv1 extends SequentialCommandGroup {
             new ParallelRaceGroup(
                 new RunCommand(() -> indexer.set(1), indexer),
                 new RunCommand(() -> drive.tankDriveVolts(2, 2), drive),
-                new WaitUntilCommand(indexer.indexerSwitchTrigger::get),
+                new WaitUntilCommand(indexer.indexerMiddleSwitch::get),
                 new WaitCommand(5)
             ),
             new InstantCommand(indexer::stop, indexer),

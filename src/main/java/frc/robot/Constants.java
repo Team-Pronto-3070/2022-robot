@@ -22,9 +22,9 @@ public final class Constants {
         public static final double RPM_TOLERANCE = 250;
 
         public static final class FEEDFORWARD {
-            public static final double S = 0.9 * 0.77912;
-            public static final double V = 0.9 * 0.11497;
-            public static final double A = 0.9 * 0.015929;
+            public static final double S = 0.77912;
+            public static final double V = 0.11497;
+            public static final double A = 0.015929;
         }
 
         public static final class PID {
@@ -37,8 +37,51 @@ public final class Constants {
     public static final class INDEXER {
         public static final int TAL_INDEXER_ID = 6;
         public static final int INDEXER_SWITCH_PORT = 9;
+        public static final int INDEXER_MIDDLE_SWITCH_PORT = 4;
         public static final double RAMP_TIME = 0.2;
-        public static final double DEADZONE = 0.1;
+        public static final double DEADZONE = 0.2;
+    }
+
+    public static final class INTAKE {
+        public static final int TAL_INTAKE_ID = 8;
+        public static final int TAL_EXTENDER_ID = 9;
+
+        public static final double FORWARD_SPEED = 0.3;
+        public static final double REVERSE_SPEED = -0.5;
+
+        public static final int[] ENCODER_PORTS = new int[] {8, 7, 6, 5}; //a, b, index, absolute
+        public static final double ENCODER_DISTANCE_PER_PULSE = 0.003067961576; //units: radians
+                                                            //2 * pi / 2048 ppr * (18 / window motor gear)
+        public static final double MAX_VELOCITY = 0.5;
+        public static final double MAX_ACCELERATION = 0.5;
+        public static final double DOWN_POSITION = -0.896; //units: radians from horizontal
+        public static final double UP_POSITION = 1.507; //vertical
+        public static final double HORIZONTAL_POSITION_OFFSET = 0.042;
+        //up - down = 2.256 radians
+        //up = .282 absolute position
+        //horizontal = .042 absolute position
+        //down = -.078 absolute position
+        
+        public static final class EXTENDER_PID {
+            public static final double P = 0.5;
+            public static final double I = 0;
+            public static final double D = 0;
+        }
+
+        public static final class EXTENDER_FEEDFORWARD {
+            public static final double S = 0;
+            public static final double G = 7.5;
+            public static final double V = 0;
+            public static final double A = 0;
+        }
+    }
+
+    public static final class CLIMBER {
+        public static final int TAL_FRONT_ID = 10;
+        public static final int TAL_BACK_ID = 7;
+        public static final int LIMIT_SWITCH_PORT = 3;
+        
+        public static final double RAMP_TIME = 0.2;
     }
 
     public static final class DRIVE {
@@ -93,22 +136,14 @@ public final class Constants {
         public static final double JOY_STICK_OMEGA_DEADZONE = 0.25;
 
         public static final double VX_COEFFICIENT = 1;
-        public static final double OMEGA_COEFFICIENT = .5;
+        public static final double OMEGA_COEFFICIENT = 0.3;
 
-        public static final double SLOW_VX_COEFFICIENT = .25;
-        public static final double SLOW_OMEGA_COEFFICIENT = .2;
+        public static final double SLOW_VX_COEFFICIENT = 0.25;
+        public static final double SLOW_OMEGA_COEFFICIENT = 0.2;
     }
 
     public static final class OI {
-
-        public static final int JOY_PORT = 3;
         public static final int XBOX_PORT = 0;
-
-        public static final Controller CONTROLLER =  Controller.XBOX;
-
-        public static enum Controller {
-            XBOX, JOYSTICK 
-        }
-
+        public static final double DEADZONE = 0.2;
     }
 }

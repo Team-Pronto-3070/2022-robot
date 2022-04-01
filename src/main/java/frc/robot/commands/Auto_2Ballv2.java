@@ -30,7 +30,7 @@ public class Auto_2Ballv2 extends SequentialCommandGroup {
             new ParallelRaceGroup(
                 new ProntoRamseteCommand(outOfTarmac, drive),
                 new RunCommand(() -> indexer.set(1), indexer),
-                new WaitUntilCommand(indexer.indexerSwitchTrigger::get)
+                new WaitUntilCommand(indexer.indexerMiddleSwitch::get)
             ),
             new InstantCommand(indexer::stop, indexer),
             new InstantCommand(drive::stop, drive),
