@@ -6,6 +6,11 @@ package frc.robot;
 
 import java.util.Map;
 
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -15,6 +20,7 @@ import frc.robot.commands.Auto_1BallNoMove;
 import frc.robot.commands.Auto_2Ballv1;
 import frc.robot.commands.Auto_2Ballv2;
 import frc.robot.commands.Auto_2Ballv3;
+import frc.robot.commands.Auto_2Ballv4;
 import frc.robot.commands.Auto_Simple0Ball;
 import frc.robot.commands.Auto_Simple1Ball;
 import frc.robot.commands.Auto_Trajectory0Ball;
@@ -39,6 +45,8 @@ import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.MathUtil;
 
@@ -58,10 +66,11 @@ public class RobotContainer {
   private final Climber_s climber = new Climber_s();
   private final IntakeExtender_s intakeExtender = new IntakeExtender_s();
 
-  private UsbCamera camera;
+  private Thread visionThread;
 
   private enum autoOptions {NONE, TRAJECTORY_TEST, SIMPLE_1_BALL, TRAJECTORY_1_BALL,
-            SIMPLE_0_BALL, TRAJECTORY_0_BALL, NO_MOVE_1_BALL, V1_2_BALL, V2_2_BALL, V3_2_BALL}
+            SIMPLE_0_BALL, TRAJECTORY_0_BALL, NO_MOVE_1_BALL, V1_2_BALL, V2_2_BALL, V3_2_BALL,
+          V4_2_BALL}
 
   //define a sendable chooser to select the autonomous command
   private SendableChooser<autoOptions> autoChooser = new SendableChooser<autoOptions>();
@@ -73,9 +82,6 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     NetworkTableInstance.getDefault().setUpdateRate(0.01);
-    camera = CameraServer.startAutomaticCapture();
-    camera.setResolution(160, 120);
-    camera.setFPS(30);
 
     //add options to the chooser
     autoChooser.setDefaultOption("None", autoOptions.NONE);
@@ -87,7 +93,8 @@ public class RobotContainer {
     autoChooser.addOption("1 ball no move", autoOptions.NO_MOVE_1_BALL);
     autoChooser.addOption("2 ball v1", autoOptions.V1_2_BALL);
     autoChooser.addOption("2 ball v2", autoOptions.V2_2_BALL);
-    autoChooser.addOption("2 ball v3", autoOptions.V3_2_BALL);
+    //autoChooser.addOption("2 ball v3", autoOptions.V3_2_BALL);
+    autoChooser.addOption("2 ball v4", autoOptions.V4_2_BALL);
 
     //put the chooser on the dashboard
     SmartDashboard.putData(autoChooser);
@@ -104,6 +111,7 @@ public class RobotContainer {
     
     // Configure the button bindings
     configureButtonBindings();
+    init_camera();
   }
 
   /**
@@ -139,7 +147,7 @@ public class RobotContainer {
                 () -> {
                   intake.forward();
                   indexer.set(indexer.indexerMiddleSwitch.get() && indexer.getHighSwitchLatch() ? 0 : 1);
-                  shooter.set(indexer.getHighSwitchLatch() ? 0 : (shooter.getRPM < 10 ? 0.25 : 0.15);
+                  shooter.set(indexer.getHighSwitchLatch() ? 0 : (shooter.getRPM() < 10 ? 0.25 : 0.15));
                 }, intake, indexer, shooter)
         .whenActive(new Intake_DownCommand(intakeExtender).withInterrupt(oi.overrideButton::get))
         .whenInactive(new Intake_UpCommand(intakeExtender).withInterrupt(oi.overrideButton::get));
@@ -164,6 +172,29 @@ public class RobotContainer {
     oi.overrideButton.whenActive(new InstantCommand(shooter::enableReverse, shooter));
   }
 
+  private void init_camera() {
+    visionThread = new Thread(() -> {
+      UsbCamera camera = CameraServer.startAutomaticCapture();
+      camera.setResolution(160, 120);
+      camera.setFPS(30);
+
+      CvSink cvSink = CameraServer.getVideo();
+      CvSource outputStream = CameraServer.putVideo("rectangle", 160, 120);
+      Mat mat = new Mat();
+
+      while (!Thread.interrupted()) {
+        if (cvSink.grabFrame(mat) == 0) {
+          outputStream.notifyError(cvSink.getError());
+          continue;
+        }
+        Imgproc.rectangle(mat, new Point(20, 20), new Point(140, 40), new Scalar(255, 255, 255), 2);
+        outputStream.putFrame(mat);
+      }
+    });
+    visionThread.setDaemon(true);
+    visionThread.start();
+  }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -181,7 +212,8 @@ public class RobotContainer {
                                 Map.entry(autoOptions.NO_MOVE_1_BALL, new Auto_1BallNoMove(drive, shooter, indexer)),
                                 Map.entry(autoOptions.V1_2_BALL, new Auto_2Ballv1(drive, shooter, indexer)),
                                 Map.entry(autoOptions.V2_2_BALL, new Auto_2Ballv2(drive, shooter, indexer)),
-                                Map.entry(autoOptions.V3_2_BALL, new Auto_2Ballv3(drive, shooter, indexer))
+                                //Map.entry(autoOptions.V3_2_BALL, new Auto_2Ballv3(drive, shooter, indexer)),
+                                Map.entry(autoOptions.V4_2_BALL, new Auto_2Ballv4(drive, shooter, indexer, intake, intakeExtender))
                     ), autoChooser::getSelected);
   }
 }
