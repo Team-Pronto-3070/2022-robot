@@ -20,7 +20,7 @@ public class HighShootCommand extends SequentialCommandGroup{
                 new RunCommand(() -> shooter.setRPM(SmartDashboard.getNumber("high shooter rpm", Constants.SHOOTER.HIGH_RPM)), shooter),
                 new SequentialCommandGroup(
                     new WaitUntilCommand(shooter::atSetpoint),
-                    new WaitCommand(0.5),
+                    new WaitCommand(1),
                     new InstantCommand(() -> indexer.set(1), indexer),
                     new WaitCommand(2),
                     new InstantCommand(() -> indexer.stop(), indexer)

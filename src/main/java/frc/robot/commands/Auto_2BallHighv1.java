@@ -19,8 +19,8 @@ import frc.robot.subsystems.IntakeExtender_s;
 import frc.robot.subsystems.Intake_s;
 import frc.robot.subsystems.Shooter_s;
 
-public class Auto_2Ballv4 extends SequentialCommandGroup {
-    public Auto_2Ballv4(Drive_s drive, Shooter_s shooter, Indexer_s indexer, Intake_s intake, IntakeExtender_s intakeExtender) {
+public class Auto_2BallHighv1 extends SequentialCommandGroup {
+    public Auto_2BallHighv1(Drive_s drive, Shooter_s shooter, Indexer_s indexer, Intake_s intake, IntakeExtender_s intakeExtender) {
         Trajectory outOfTarmac =
             TrajectoryGenerator.generateTrajectory(
                 new Pose2d(0, 0, new Rotation2d(0)),
@@ -36,7 +36,7 @@ public class Auto_2Ballv4 extends SequentialCommandGroup {
                 drive.getTrajectoryConfig().setReversed(true));
         
         addCommands(
-            new LowShootCommand(drive, shooter, indexer),
+            //new LowShootCommand(drive, shooter, indexer),
             new InstantCommand(() -> drive.resetPose(outOfTarmac.getInitialPose()), drive),
             new ParallelDeadlineGroup(
                 //deadline
@@ -53,12 +53,14 @@ public class Auto_2Ballv4 extends SequentialCommandGroup {
             ),
             new InstantCommand(indexer::stop, indexer),
             new InstantCommand(intake::stop, intake),
-            new ParallelCommandGroup(
-                new Intake_UpCommand(intakeExtender),
-                new ProntoRamseteCommand(setUpForShot, drive)
-            ),
+            //new ParallelCommandGroup(
+            //    new Intake_UpCommand(intakeExtender),
+                //new ProntoRamseteCommand(setUpForShot, drive)
+            //),
             new InstantCommand(drive::stop, drive),
-            new LowShootCommand(drive, shooter, indexer)
+            new ClearShooterCommand(indexer, shooter),
+            new HighShootCommand(drive, shooter, indexer),
+            new Intake_UpCommand(intakeExtender)
         );
     }
 }

@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.Auto_1BallNoMove;
+import frc.robot.commands.Auto_2BallHighv1;
 import frc.robot.commands.Auto_2Ballv1;
 import frc.robot.commands.Auto_2Ballv2;
 import frc.robot.commands.Auto_2Ballv3;
@@ -70,7 +71,7 @@ public class RobotContainer {
 
   private enum autoOptions {NONE, TRAJECTORY_TEST, SIMPLE_1_BALL, TRAJECTORY_1_BALL,
             SIMPLE_0_BALL, TRAJECTORY_0_BALL, NO_MOVE_1_BALL, V1_2_BALL, V2_2_BALL, V3_2_BALL,
-          V4_2_BALL}
+          V4_2_BALL, V1_2HIGH}
 
   //define a sendable chooser to select the autonomous command
   private SendableChooser<autoOptions> autoChooser = new SendableChooser<autoOptions>();
@@ -95,6 +96,7 @@ public class RobotContainer {
     autoChooser.addOption("2 ball v2", autoOptions.V2_2_BALL);
     //autoChooser.addOption("2 ball v3", autoOptions.V3_2_BALL);
     autoChooser.addOption("2 ball v4", autoOptions.V4_2_BALL);
+    autoChooser.addOption("2 ball both high v1", autoOptions.V1_2HIGH);
 
     //put the chooser on the dashboard
     SmartDashboard.putData(autoChooser);
@@ -157,10 +159,10 @@ public class RobotContainer {
                   intake.forward();
               }, indexer);
     oi.highSmartShooterButton.whenPressed(new HighShootCommand(drive, shooter, indexer)
-                      .beforeStarting(new ClearShooterCommand(indexer, shooter))
+                      //.beforeStarting(new ClearShooterCommand(indexer, shooter))
                       .withInterrupt(oi.overrideButton::get));
     oi.lowSmartShooterButton.whenPressed(new LowShootCommand(drive, shooter, indexer)
-                      .beforeStarting(new ClearShooterCommand(indexer, shooter))
+                      //.beforeStarting(new ClearShooterCommand(indexer, shooter))
                       .withInterrupt(oi.overrideButton::get));
     oi.indexerReverseButton.whileHeld(() -> indexer.set(-1), indexer);
 
@@ -213,7 +215,8 @@ public class RobotContainer {
                                 Map.entry(autoOptions.V1_2_BALL, new Auto_2Ballv1(drive, shooter, indexer)),
                                 Map.entry(autoOptions.V2_2_BALL, new Auto_2Ballv2(drive, shooter, indexer)),
                                 //Map.entry(autoOptions.V3_2_BALL, new Auto_2Ballv3(drive, shooter, indexer)),
-                                Map.entry(autoOptions.V4_2_BALL, new Auto_2Ballv4(drive, shooter, indexer, intake, intakeExtender))
+                                Map.entry(autoOptions.V4_2_BALL, new Auto_2Ballv4(drive, shooter, indexer, intake, intakeExtender)),
+                                Map.entry(autoOptions.V1_2HIGH, new Auto_2BallHighv1(drive, shooter, indexer, intake, intakeExtender))
                     ), autoChooser::getSelected);
   }
 }

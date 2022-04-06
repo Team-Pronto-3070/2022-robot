@@ -41,9 +41,6 @@ public class Drive_s extends SubsystemBase{
     private PIDController LPID;
     private PIDController RPID;
     private SimpleMotorFeedforward ff;
-
-    private TrajectoryConfig trajectoryConfig;
-    
     
     public Drive_s() {
 
@@ -100,11 +97,6 @@ public class Drive_s extends SubsystemBase{
         kinematics = new DifferentialDriveKinematics(Constants.DRIVE.TRACK_WIDTH);
         odometry = new DifferentialDriveOdometry(getGyro());
 
-        trajectoryConfig = new TrajectoryConfig(Constants.DRIVE.MAX_VELOCITY,
-                                                Constants.DRIVE.MAX_ACCELERATION)
-                            .setKinematics(kinematics)
-                            .addConstraint(new DifferentialDriveVoltageConstraint(ff, kinematics, 10))
-                            .addConstraint(new CentripetalAccelerationConstraint(Constants.DRIVE.MAX_CENTRIPETAL_ACCELERATION));
     }
 
     /**
@@ -162,7 +154,11 @@ public class Drive_s extends SubsystemBase{
     }
 
     public TrajectoryConfig getTrajectoryConfig() {
-        return trajectoryConfig;
+        return new TrajectoryConfig(Constants.DRIVE.MAX_VELOCITY,
+                            Constants.DRIVE.MAX_ACCELERATION)
+                    .setKinematics(kinematics)
+                    .addConstraint(new DifferentialDriveVoltageConstraint(ff, kinematics, 10))
+                    .addConstraint(new CentripetalAccelerationConstraint(Constants.DRIVE.MAX_CENTRIPETAL_ACCELERATION));
     }
 
     public void stop() {

@@ -17,8 +17,8 @@ public final class Constants {
     public static final class SHOOTER {
         public static final int TAL_SHOOTER_ID = 5;
         public static final double RAMP_TIME = 0.2;
-        public static final double HIGH_RPM = 4500;
-        public static final double LOW_RPM = 1500;
+        public static final double HIGH_RPM = 3000;
+        public static final double LOW_RPM = 1750;
         public static final double RPM_TOLERANCE = 250;
 
         public static final class FEEDFORWARD {
@@ -55,7 +55,7 @@ public final class Constants {
         public static final double MAX_VELOCITY = 0.5;
         public static final double MAX_ACCELERATION = 0.5;
         public static final double DOWN_POSITION = -0.896; //units: radians from horizontal
-        public static final double UP_POSITION = 1.507; //vertical
+        public static final double UP_POSITION = 1.477; //vertical
         public static final double HORIZONTAL_POSITION_OFFSET = 0.042;
         //up - down = 2.256 radians
         //up = .282 absolute position
